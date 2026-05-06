@@ -24,3 +24,6 @@ O arquivo é enviado diretamente para um bucket no Supabase Storage e a URL púb
 Quadro de Missões (Database/CRUD):
 Um mural interativo onde o aventureiro pode criar, visualizar, editar e remover suas missões (tarefas).  
 Sincronização em tempo real com o banco de dados PostgreSQL.
+
+> **Status do Projeto:** 🟢 Ao Vivo  
+> **Acesse a Taberna aqui:** [👉 Clique para entrar na guilda](https://wanessadev.github.io/taberna-dos-bits/)
