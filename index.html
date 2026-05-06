@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taberna dos Bits</title>
+
+  <!-- Fonte pixel art do Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <!-- Arquivo de estilos -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Decoração de fundo: estrelas/pixels flutuantes -->
+  <div class="bg-pixels" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <!-- Container principal (o "pergaminho") -->
+  <main class="scroll-container">
+
+    <!-- Cabeçalho da Taberna -->
+    <header class="tavern-header">
+      <div class="tavern-icon">⚔️</div>
+      <h1 class="tavern-title">Taberna<br/>dos Bits</h1>
+      <div class="tavern-subtitle">— Guilda de RPG —</div>
+    </header>
+
+    <!-- Abas de navegação Login / Cadastro -->
+    <nav class="tab-nav" role="tablist">
+      <button
+        class="tab-btn active"
+        id="tab-login"
+        role="tab"
+        aria-selected="true"
+        aria-controls="form-login"
+        onclick="switchTab('login')"
+      >
+        ENTRAR
+      </button>
+      <button
+        class="tab-btn"
+        id="tab-register"
+        role="tab"
+        aria-selected="false"
+        aria-controls="form-register"
+        onclick="switchTab('register')"
+      >
+        FORJAR
+      </button>
+    </nav>
+
+    <!-- ========================
+         FORMULÁRIO DE LOGIN
+    ========================= -->
+    <section id="form-login" class="form-panel active" role="tabpanel" aria-labelledby="tab-login">
+
+      <div class="quest-banner">
+        <span class="quest-label">▶ MISSÃO:</span> Prove sua identidade, aventureiro!
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="login-email">
+          ✉ Identidade do Herói
+        </label>
+        <input
+          class="pixel-input"
+          type="email"
+          id="login-email"
+          placeholder="heroi@guilda.com"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="login-password">
+          🔒 Código Secreto
+        </label>
+        <input
+          class="pixel-input"
+          type="password"
+          id="login-password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button class="btn-primary" onclick="handleLogin()">
+        ⚔ ENTRAR NA TABERNA
+      </button>
+
+      <p class="switch-link">
+        Novo por aqui?
+        <a href="#" onclick="switchTab('register'); return false;">
+          Forje sua conta
+        </a>
+      </p>
+
+    </section>
+
+    <!-- ========================
+         FORMULÁRIO DE CADASTRO
+    ========================= -->
+    <section id="form-register" class="form-panel" role="tabpanel" aria-labelledby="tab-register">
+
+      <div class="quest-banner">
+        <span class="quest-label">▶ MISSÃO:</span> Crie seu personagem, lendário!
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reg-name">
+          🧙 Nome do Aventureiro
+        </label>
+        <input
+          class="pixel-input"
+          type="text"
+          id="reg-name"
+          placeholder="Ex: Magus Biterion"
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reg-email">
+          ✉ Identidade do Herói
+        </label>
+        <input
+          class="pixel-input"
+          type="email"
+          id="reg-email"
+          placeholder="heroi@guilda.com"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reg-password">
+          🔒 Código Secreto
+        </label>
+        <input
+          class="pixel-input"
+          type="password"
+          id="reg-password"
+          placeholder="••••••••"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="reg-confirm">
+          🔑 Confirme o Código
+        </label>
+        <input
+          class="pixel-input"
+          type="password"
+          id="reg-confirm"
+          placeholder="••••••••"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <button class="btn-primary" onclick="handleRegister()">
+        ✨ FORJAR PERSONAGEM
+      </button>
+
+      <p class="switch-link">
+        Já tem uma conta?
+        <a href="#" onclick="switchTab('login'); return false;">
+          Entre na Taberna
+        </a>
+      </p>
+
+    </section>
+
+    <!-- Mensagem de feedback (toast) -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Rodapé -->
+    <footer class="tavern-footer">
+      ⚙ Taberna dos Bits v1.0 · Powered by Supabase
+    </footer>
+
+  </main>
+
+  <!-- Arquivo de scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
