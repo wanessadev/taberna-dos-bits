@@ -1,0 +1,354 @@
+/* ============================================================
+   heroi.css — Tela de Configuração do Herói
+   Importa e estende o style.css da Taberna dos Bits
+   ============================================================ */
+
+/* ---------- AJUSTE DO CONTAINER PARA ESTA TELA ---------- */
+.hero-scroll {
+  max-width: 500px;   /* um pouco mais largo por ter 3 cards de classe */
+}
+
+/* ---------- SEÇÕES DE CONFIGURAÇÃO ---------- */
+.config-section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 8px;
+  color: var(--cor-dourado);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--cor-borda);
+}
+
+/* ============================================================
+   ÁREA DE UPLOAD DE AVATAR
+   ============================================================ */
+
+.upload-arena {
+  width: 100%;
+  min-height: 140px;
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  background-color: #0f0800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: none;
+}
+
+.upload-arena:hover {
+  border-color: var(--cor-dourado);
+  background-color: #150c00;
+}
+
+/* Animação de "dashed" pixel art no hover */
+.upload-arena:hover .upload-placeholder {
+  opacity: 1;
+}
+
+/* ---------- PLACEHOLDER ---------- */
+.upload-placeholder {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.7;
+}
+
+.upload-icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 12px;
+  animation: pulsarEspada 3s steps(2, end) infinite;
+}
+
+.upload-text {
+  font-size: 8px;
+  color: var(--cor-texto);
+  line-height: 2;
+  margin-bottom: 10px;
+}
+
+.upload-hint {
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  letter-spacing: 1px;
+}
+
+/* ---------- PREVIEW DA IMAGEM ---------- */
+.avatar-preview-wrap {
+  padding: 16px;
+  text-align: center;
+}
+
+/* Moldura pixel art (dupla borda + sombra sólida) */
+.pixel-frame {
+  display: inline-block;
+  border: 4px solid var(--cor-dourado);
+  outline: 4px solid #000;
+  box-shadow: 6px 6px 0 0 #000;
+  margin-bottom: 12px;
+  background-color: #000;
+  line-height: 0; /* remove espaço abaixo da imagem */
+}
+
+.pixel-frame img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  image-rendering: pixelated;  /* mantém estética pixel ao redimensionar */
+}
+
+.preview-badge {
+  font-size: 7px;
+  color: var(--cor-primaria);
+  letter-spacing: 1px;
+}
+
+/* ---------- BOTÃO SECUNDÁRIO (remover) ---------- */
+.btn-secondary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 8px;
+  background-color: transparent;
+  color: var(--cor-erro);
+  border: 4px solid var(--cor-erro);
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 3px 3px 0 0 #000;
+}
+
+.btn-secondary:hover {
+  background-color: #2e0a0a;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.btn-secondary:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* ============================================================
+   GRID DE SELEÇÃO DE CLASSE
+   ============================================================ */
+
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* Card de classe */
+.class-card {
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 8px;
+  background-color: #0f0800;
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 0 #000;
+  text-align: center;
+  transition: none;
+}
+
+.class-card:hover {
+  background-color: #1a1000;
+  border-color: var(--cor-texto-dim);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+/* Classe selecionada */
+.class-card.selected {
+  background-color: #0a2e14;
+  border-color: var(--cor-primaria);
+  box-shadow: 4px 4px 0 0 #000;
+  transform: none;
+}
+
+.class-card.selected .class-name {
+  color: var(--cor-primaria);
+}
+
+.class-emoji {
+  font-size: 24px;
+  display: block;
+  line-height: 1;
+}
+
+.class-name {
+  font-size: 7px;
+  color: var(--cor-dourado);
+  letter-spacing: 1px;
+}
+
+.class-desc {
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  line-height: 1.8;
+}
+
+/* ---------- INFO DA CLASSE SELECIONADA ---------- */
+.class-selected-info {
+  background-color: #0a0600;
+  border: 4px solid var(--cor-borda-alt);
+  border-left: 4px solid var(--cor-primaria);
+  padding: 10px 12px;
+  font-size: 7px;
+  color: var(--cor-texto-dim);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#class-selected-name {
+  color: var(--cor-primaria);
+}
+
+/* ============================================================
+   BARRA DE PROGRESSO PIXEL ART
+   ============================================================ */
+
+.progress-container {
+  margin-bottom: 20px;
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  padding: 16px;
+  background-color: #0a0600;
+}
+
+.progress-label {
+  font-size: 7px;
+  color: var(--cor-primaria);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+/* Cursor piscante no label de progresso */
+.blink-cursor {
+  animation: piscar 0.7s steps(1, end) infinite;
+  display: inline-block;
+}
+
+@keyframes piscar {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Track da barra */
+.progress-bar-track {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background-color: #000;
+  border: 4px solid var(--cor-borda-alt);
+  overflow: hidden;
+}
+
+/* Preenchimento animado */
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--cor-primaria);
+  transition: width 0.4s steps(10, end);  /* steps() mantém visual pixelado */
+}
+
+/* Segmentos decorativos sobre a barra (linhas verticais) */
+.progress-bar-segments {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.progress-bar-segments span {
+  flex: 1;
+  border-right: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+.progress-bar-segments span:last-child {
+  border-right: none;
+}
+
+/* Log de etapas estilo terminal */
+.progress-log {
+  margin-top: 12px;
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  line-height: 2.2;
+  min-height: 60px;
+}
+
+.progress-log .log-line {
+  display: block;
+}
+
+.progress-log .log-ok   { color: var(--cor-primaria); }
+.progress-log .log-info { color: var(--cor-texto-dim); }
+.progress-log .log-erro { color: var(--cor-erro); }
+
+/* ============================================================
+   BOTÃO FINALIZAR (versão maior para destaque)
+   ============================================================ */
+
+.btn-finalizar {
+  font-size: 11px;
+  padding: 18px 12px;
+  margin-top: 4px;
+  letter-spacing: 2px;
+  box-shadow: 6px 6px 0 0 #000;
+}
+
+.btn-finalizar:hover {
+  box-shadow: 3px 3px 0 0 #000;
+}
+
+.btn-finalizar:disabled {
+  background-color: #145c30;
+  color: #0a3018;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 6px 6px 0 0 #000;
+}
+
+/* ============================================================
+   RESPONSIVIDADE MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .class-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .class-card {
+    padding: 10px 4px;
+  }
+
+  .class-emoji {
+    font-size: 18px;
+  }
+
+  .class-name {
+    font-size: 6px;
+  }
+
+  .class-desc {
+    display: none;  /* esconde descrição em telas muito pequenas */
+  }
+
+  .btn-finalizar {
+    font-size: 9px;
+    padding: 14px 10px;
+  }
+}

@@ -187,7 +187,13 @@
 
   </main>
 
-  <!-- Arquivo de scripts -->
-  <script src="script.js"></script>
+  <!-- 1º: A biblioteca do Supabase (o motor) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- 2º: O arquivo do seu colega (as chaves e a conexão) -->
+<script src="supabaseClient.js"></script>
+
+<!-- 3º: O seu arquivo (a lógica de login e cadastro) -->
+<script src="auth.js"></script>
 </body>
 </html>
