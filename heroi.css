@@ -1,14 +1,11 @@
 /* ============================================================
    heroi.css — Tela de Configuração do Herói
-   Importa e estende o style.css da Taberna dos Bits
    ============================================================ */
 
-/* ---------- AJUSTE DO CONTAINER PARA ESTA TELA ---------- */
 .hero-scroll {
-  max-width: 500px;   /* um pouco mais largo por ter 3 cards de classe */
+  max-width: 520px;
 }
 
-/* ---------- SEÇÕES DE CONFIGURAÇÃO ---------- */
 .config-section {
   margin-bottom: 28px;
 }
@@ -23,118 +20,6 @@
 }
 
 /* ============================================================
-   ÁREA DE UPLOAD DE AVATAR
-   ============================================================ */
-
-.upload-arena {
-  width: 100%;
-  min-height: 140px;
-  border: 4px solid var(--cor-borda);
-  outline: 4px solid #000;
-  background-color: #0f0800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  transition: none;
-}
-
-.upload-arena:hover {
-  border-color: var(--cor-dourado);
-  background-color: #150c00;
-}
-
-/* Animação de "dashed" pixel art no hover */
-.upload-arena:hover .upload-placeholder {
-  opacity: 1;
-}
-
-/* ---------- PLACEHOLDER ---------- */
-.upload-placeholder {
-  text-align: center;
-  padding: 20px;
-  opacity: 0.7;
-}
-
-.upload-icon {
-  font-size: 36px;
-  display: block;
-  margin-bottom: 12px;
-  animation: pulsarEspada 3s steps(2, end) infinite;
-}
-
-.upload-text {
-  font-size: 8px;
-  color: var(--cor-texto);
-  line-height: 2;
-  margin-bottom: 10px;
-}
-
-.upload-hint {
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-  letter-spacing: 1px;
-}
-
-/* ---------- PREVIEW DA IMAGEM ---------- */
-.avatar-preview-wrap {
-  padding: 16px;
-  text-align: center;
-}
-
-/* Moldura pixel art (dupla borda + sombra sólida) */
-.pixel-frame {
-  display: inline-block;
-  border: 4px solid var(--cor-dourado);
-  outline: 4px solid #000;
-  box-shadow: 6px 6px 0 0 #000;
-  margin-bottom: 12px;
-  background-color: #000;
-  line-height: 0; /* remove espaço abaixo da imagem */
-}
-
-.pixel-frame img {
-  display: block;
-  width: 96px;
-  height: 96px;
-  object-fit: cover;
-  image-rendering: pixelated;  /* mantém estética pixel ao redimensionar */
-}
-
-.preview-badge {
-  font-size: 7px;
-  color: var(--cor-primaria);
-  letter-spacing: 1px;
-}
-
-/* ---------- BOTÃO SECUNDÁRIO (remover) ---------- */
-.btn-secondary {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px 8px;
-  background-color: transparent;
-  color: var(--cor-erro);
-  border: 4px solid var(--cor-erro);
-  cursor: pointer;
-  letter-spacing: 1px;
-  box-shadow: 3px 3px 0 0 #000;
-}
-
-.btn-secondary:hover {
-  background-color: #2e0a0a;
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 0 #000;
-}
-
-.btn-secondary:active {
-  transform: translate(3px, 3px);
-  box-shadow: none;
-}
-
-/* ============================================================
    GRID DE SELEÇÃO DE CLASSE
    ============================================================ */
 
@@ -145,14 +30,13 @@
   margin-bottom: 16px;
 }
 
-/* Card de classe */
 .class-card {
   font-family: 'Press Start 2P', monospace;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 14px 8px;
+  padding: 14px 6px;
   background-color: #0f0800;
   border: 4px solid var(--cor-borda);
   outline: 4px solid #000;
@@ -169,7 +53,10 @@
   box-shadow: 2px 2px 0 0 #000;
 }
 
-/* Classe selecionada */
+.class-card:hover .pixel-character svg {
+  animation: heroShake 0.3s steps(2, end) infinite;
+}
+
 .class-card.selected {
   background-color: #0a2e14;
   border-color: var(--cor-primaria);
@@ -181,10 +68,48 @@
   color: var(--cor-primaria);
 }
 
-.class-emoji {
-  font-size: 24px;
-  display: block;
-  line-height: 1;
+/* Personagem pixel art */
+.pixel-character {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.pixel-character svg {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Animação idle: leve bob up/down */
+@keyframes heroIdle {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-2px); }
+}
+
+@keyframes heroShake {
+  0%    { transform: translateX(0); }
+  50%   { transform: translateX(2px); }
+}
+
+.class-card.selected .pixel-character svg {
+  animation: heroIdle 1s steps(2, end) infinite;
+}
+
+/* Brilho ao redor do herói selecionado */
+.class-card.selected .pixel-character::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--cor-primaria);
+  opacity: 0.4;
+  animation: piscar 1s steps(1, end) infinite;
+}
+
+@keyframes piscar {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0; }
 }
 
 .class-name {
@@ -197,6 +122,28 @@
   font-size: 6px;
   color: var(--cor-texto-dim);
   line-height: 1.8;
+}
+
+/* Mini barras de stats */
+.class-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.stat-bar {
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  letter-spacing: 0px;
+  display: block;
+  text-align: left;
+  padding: 0 4px;
+}
+
+.class-card.selected .stat-bar {
+  color: var(--cor-primaria);
 }
 
 /* ---------- INFO DA CLASSE SELECIONADA ---------- */
@@ -217,88 +164,7 @@
 }
 
 /* ============================================================
-   BARRA DE PROGRESSO PIXEL ART
-   ============================================================ */
-
-.progress-container {
-  margin-bottom: 20px;
-  border: 4px solid var(--cor-borda);
-  outline: 4px solid #000;
-  padding: 16px;
-  background-color: #0a0600;
-}
-
-.progress-label {
-  font-size: 7px;
-  color: var(--cor-primaria);
-  margin-bottom: 12px;
-  letter-spacing: 1px;
-}
-
-/* Cursor piscante no label de progresso */
-.blink-cursor {
-  animation: piscar 0.7s steps(1, end) infinite;
-  display: inline-block;
-}
-
-@keyframes piscar {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-
-/* Track da barra */
-.progress-bar-track {
-  position: relative;
-  width: 100%;
-  height: 20px;
-  background-color: #000;
-  border: 4px solid var(--cor-borda-alt);
-  overflow: hidden;
-}
-
-/* Preenchimento animado */
-.progress-bar-fill {
-  height: 100%;
-  width: 0%;
-  background-color: var(--cor-primaria);
-  transition: width 0.4s steps(10, end);  /* steps() mantém visual pixelado */
-}
-
-/* Segmentos decorativos sobre a barra (linhas verticais) */
-.progress-bar-segments {
-  position: absolute;
-  inset: 0;
-  display: flex;
-}
-
-.progress-bar-segments span {
-  flex: 1;
-  border-right: 2px solid rgba(0, 0, 0, 0.4);
-}
-
-.progress-bar-segments span:last-child {
-  border-right: none;
-}
-
-/* Log de etapas estilo terminal */
-.progress-log {
-  margin-top: 12px;
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-  line-height: 2.2;
-  min-height: 60px;
-}
-
-.progress-log .log-line {
-  display: block;
-}
-
-.progress-log .log-ok   { color: var(--cor-primaria); }
-.progress-log .log-info { color: var(--cor-texto-dim); }
-.progress-log .log-erro { color: var(--cor-erro); }
-
-/* ============================================================
-   BOTÃO FINALIZAR (versão maior para destaque)
+   BOTÃO FINALIZAR
    ============================================================ */
 
 .btn-finalizar {
@@ -327,7 +193,6 @@
 
 @media (max-width: 480px) {
   .class-grid {
-    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
   }
 
@@ -335,8 +200,9 @@
     padding: 10px 4px;
   }
 
-  .class-emoji {
-    font-size: 18px;
+  .pixel-character svg {
+    width: 48px;
+    height: 72px;
   }
 
   .class-name {
@@ -344,7 +210,11 @@
   }
 
   .class-desc {
-    display: none;  /* esconde descrição em telas muito pequenas */
+    display: none;
+  }
+
+  .class-stats {
+    display: none;
   }
 
   .btn-finalizar {

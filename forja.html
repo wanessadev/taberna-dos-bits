@@ -9,82 +9,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 
-  <!-- CSS compartilhado da Taberna + CSS desta tela -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="heroi.css" />
 </head>
 <body>
 
-  <!-- Pixels decorativos de fundo (mesmo da tela de login) -->
   <div class="bg-pixels" aria-hidden="true">
     <span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- Container principal (pergaminho) -->
   <main class="scroll-container hero-scroll">
 
-    <!-- Cabeçalho -->
     <header class="tavern-header">
-      <div class="tavern-icon" id="class-icon">🛡️</div>
+      <div class="tavern-icon" id="class-icon">⚔️</div>
       <h1 class="tavern-title">Forja do<br/>Herói</h1>
-      <div class="tavern-subtitle">— Configure seu Personagem —</div>
+      <div class="tavern-subtitle">— Escolha sua Classe —</div>
     </header>
 
-    <!-- Banner de missão -->
     <div class="quest-banner">
-      <span class="quest-label">▶ MISSÃO:</span> Defina sua classe e escolha seu brasão, aventureiro!
+      <span class="quest-label">▶ MISSÃO:</span> Escolha seu caminho, aventureiro!
     </div>
 
     <!-- =============================================
-         PASSO 1 — BRASÃO / AVATAR
-    ============================================== -->
-    <section class="config-section">
-      <h2 class="section-title">[ BRASÃO DA GUILDA ]</h2>
-
-      <!-- Área de upload estilizada -->
-      <div class="upload-arena" id="upload-arena" onclick="document.getElementById('avatar-input').click()">
-
-        <!-- Preview da imagem (oculto até seleção) -->
-        <div class="avatar-preview-wrap" id="preview-wrap" style="display:none;">
-          <div class="pixel-frame">
-            <img id="avatar-preview" src="" alt="Preview do brasão" />
-          </div>
-          <div class="preview-badge">✔ BRASÃO SELECIONADO</div>
-        </div>
-
-        <!-- Placeholder quando nenhuma imagem está selecionada -->
-        <div class="upload-placeholder" id="upload-placeholder">
-          <div class="upload-icon">🖼️</div>
-          <p class="upload-text">CLIQUE PARA<br/>CARREGAR BRASÃO</p>
-          <p class="upload-hint">PNG · JPG · WEBP · máx. 2MB</p>
-        </div>
-
-      </div>
-
-      <!-- Input de arquivo oculto -->
-      <input
-        type="file"
-        id="avatar-input"
-        accept="image/png, image/jpeg, image/webp"
-        style="display:none;"
-        onchange="handleAvatarSelect(event)"
-      />
-
-      <!-- Botão para remover imagem (aparece após seleção) -->
-      <button class="btn-secondary" id="btn-remover-avatar" style="display:none;" onclick="removerAvatar()">
-        ✖ REMOVER BRASÃO
-      </button>
-    </section>
-
-    <!-- =============================================
-         PASSO 2 — SELEÇÃO DE CLASSE
+         SELEÇÃO DE CLASSE COM PIXEL ART
     ============================================== -->
     <section class="config-section">
       <h2 class="section-title">[ ESCOLHA SUA CLASSE ]</h2>
 
       <div class="class-grid" role="group" aria-label="Seleção de classe do herói">
 
+        <!-- GUERREIRO -->
         <button
           class="class-card"
           id="class-guerreiro"
@@ -92,11 +47,62 @@
           onclick="selecionarClasse('Guerreiro')"
           aria-pressed="false"
         >
-          <span class="class-emoji">⚔️</span>
+          <div class="pixel-character" id="sprite-guerreiro">
+            <!-- Guerreiro: armadura pesada, capacete, espada e escudo -->
+            <svg viewBox="0 0 16 24" xmlns="http://www.w3.org/2000/svg" width="64" height="96" shape-rendering="crispEdges">
+              <!-- Capacete -->
+              <rect x="5" y="0" width="6" height="1" fill="#888"/>
+              <rect x="4" y="1" width="8" height="1" fill="#aaa"/>
+              <rect x="4" y="2" width="8" height="2" fill="#888"/>
+              <!-- Viseira dourada -->
+              <rect x="5" y="3" width="6" height="1" fill="#c8a000"/>
+              <!-- Rosto -->
+              <rect x="5" y="4" width="6" height="3" fill="#d4a574"/>
+              <!-- Olhos -->
+              <rect x="6" y="5" width="1" height="1" fill="#2a1a0a"/>
+              <rect x="9" y="5" width="1" height="1" fill="#2a1a0a"/>
+              <!-- Protetor de ombros -->
+              <rect x="3" y="7" width="10" height="2" fill="#888"/>
+              <rect x="2" y="7" width="2" height="1" fill="#aaa"/>
+              <rect x="12" y="7" width="2" height="1" fill="#aaa"/>
+              <!-- Torso com armadura -->
+              <rect x="4" y="9" width="8" height="5" fill="#777"/>
+              <!-- Detalhe central da armadura -->
+              <rect x="7" y="9" width="2" height="5" fill="#555"/>
+              <rect x="6" y="11" width="4" height="1" fill="#555"/>
+              <!-- Braço esquerdo (com escudo) -->
+              <rect x="2" y="9" width="2" height="5" fill="#888"/>
+              <!-- Escudo -->
+              <rect x="0" y="9" width="3" height="5" fill="#c8a000"/>
+              <rect x="1" y="10" width="1" height="3" fill="#8b6914"/>
+              <rect x="0" y="11" width="3" height="1" fill="#8b6914"/>
+              <!-- Braço direito (com espada) -->
+              <rect x="12" y="9" width="2" height="5" fill="#888"/>
+              <!-- Espada -->
+              <rect x="14" y="5" width="1" height="10" fill="#ddd"/>
+              <rect x="13" y="8" width="3" height="1" fill="#c8a000"/>
+              <!-- Cintura/cinto -->
+              <rect x="4" y="14" width="8" height="2" fill="#555"/>
+              <rect x="7" y="14" width="2" height="2" fill="#c8a000"/>
+              <!-- Pernas (calças de armadura) -->
+              <rect x="4" y="16" width="3" height="4" fill="#666"/>
+              <rect x="9" y="16" width="3" height="4" fill="#666"/>
+              <!-- Botas -->
+              <rect x="4" y="20" width="3" height="3" fill="#444"/>
+              <rect x="9" y="20" width="3" height="3" fill="#444"/>
+              <rect x="3" y="22" width="4" height="1" fill="#333"/>
+              <rect x="9" y="22" width="4" height="1" fill="#333"/>
+            </svg>
+          </div>
           <span class="class-name">GUERREIRO</span>
           <span class="class-desc">Força e<br/>resistência</span>
+          <div class="class-stats">
+            <span class="stat-bar" title="Força">⚔ ████░</span>
+            <span class="stat-bar" title="Magia">✨ █░░░░</span>
+          </div>
         </button>
 
+        <!-- MAGO -->
         <button
           class="class-card"
           id="class-mago"
@@ -104,21 +110,149 @@
           onclick="selecionarClasse('Mago')"
           aria-pressed="false"
         >
-          <span class="class-emoji">🧙</span>
+          <div class="pixel-character" id="sprite-mago">
+            <!-- Bruxa de cabelos ruivos, chapéu pontudo, cajado -->
+            <svg viewBox="0 0 16 24" xmlns="http://www.w3.org/2000/svg" width="64" height="96" shape-rendering="crispEdges">
+              <!-- Chapéu pontudo (topo) -->
+              <rect x="8" y="0" width="1" height="1" fill="#1a0a2e"/>
+              <rect x="7" y="1" width="2" height="1" fill="#1a0a2e"/>
+              <rect x="6" y="2" width="4" height="1" fill="#1a0a2e"/>
+              <rect x="5" y="3" width="6" height="1" fill="#1a0a2e"/>
+              <rect x="4" y="4" width="8" height="1" fill="#1a0a2e"/>
+              <!-- Aba do chapéu -->
+              <rect x="3" y="5" width="10" height="1" fill="#2a1050"/>
+              <!-- Fita dourada no chapéu -->
+              <rect x="4" y="5" width="8" height="1" fill="#c8a000"/>
+              <!-- Cabelos ruivos (laterais e atrás) -->
+              <rect x="3" y="6" width="2" height="5" fill="#cc4400"/>
+              <rect x="11" y="6" width="2" height="5" fill="#cc4400"/>
+              <rect x="3" y="11" width="2" height="3" fill="#aa3300"/>
+              <rect x="11" y="11" width="2" height="3" fill="#aa3300"/>
+              <!-- Rosto -->
+              <rect x="5" y="6" width="6" height="5" fill="#f0c8a0"/>
+              <!-- Olhos (verdes, de bruxa) -->
+              <rect x="6" y="8" width="1" height="1" fill="#00cc44"/>
+              <rect x="9" y="8" width="1" height="1" fill="#00cc44"/>
+              <!-- Sorriso travesso -->
+              <rect x="6" y="10" width="1" height="1" fill="#c06040"/>
+              <rect x="9" y="10" width="1" height="1" fill="#c06040"/>
+              <rect x="7" y="11" width="2" height="1" fill="#c06040"/>
+              <!-- Capa/robes (roxo) -->
+              <rect x="4" y="11" width="8" height="6" fill="#3d1b6e"/>
+              <!-- Detalhe central -->
+              <rect x="7" y="11" width="2" height="6" fill="#2a1050"/>
+              <!-- Estrelinhas no robe -->
+              <rect x="5" y="13" width="1" height="1" fill="#c8a000"/>
+              <rect x="10" y="15" width="1" height="1" fill="#c8a000"/>
+              <!-- Braço esquerdo -->
+              <rect x="2" y="11" width="2" height="5" fill="#3d1b6e"/>
+              <!-- Cajado mágico -->
+              <rect x="1" y="4" width="1" height="12" fill="#8b5e2a"/>
+              <!-- Orbe do cajado -->
+              <rect x="0" y="2" width="3" height="3" fill="#6600cc"/>
+              <rect x="0" y="3" width="3" height="1" fill="#9933ff"/>
+              <!-- Brilho do orbe -->
+              <rect x="1" y="2" width="1" height="1" fill="#cc66ff"/>
+              <!-- Braço direito -->
+              <rect x="12" y="11" width="2" height="5" fill="#3d1b6e"/>
+              <!-- Saia/robe inferior -->
+              <rect x="4" y="17" width="8" height="4" fill="#2a1050"/>
+              <rect x="3" y="19" width="10" height="2" fill="#1a0a3e"/>
+              <!-- Botinhas -->
+              <rect x="5" y="21" width="2" height="2" fill="#1a0a2e"/>
+              <rect x="9" y="21" width="2" height="2" fill="#1a0a2e"/>
+              <rect x="4" y="22" width="3" height="1" fill="#0d0520"/>
+              <rect x="9" y="22" width="3" height="1" fill="#0d0520"/>
+            </svg>
+          </div>
           <span class="class-name">MAGO</span>
           <span class="class-desc">Magia e<br/>sabedoria</span>
+          <div class="class-stats">
+            <span class="stat-bar" title="Força">⚔ █░░░░</span>
+            <span class="stat-bar" title="Magia">✨ ████░</span>
+          </div>
         </button>
 
+        <!-- ARQUEIRO -->
         <button
           class="class-card"
-          id="class-ladino"
-          data-class="Ladino"
-          onclick="selecionarClasse('Ladino')"
+          id="class-arqueiro"
+          data-class="Arqueiro"
+          onclick="selecionarClasse('Arqueiro')"
           aria-pressed="false"
         >
-          <span class="class-emoji">🗡️</span>
-          <span class="class-name">LADINO</span>
+          <div class="pixel-character" id="sprite-arqueiro">
+            <!-- Arqueiro élfico, capuz verde, arco e flecha -->
+            <svg viewBox="0 0 16 24" xmlns="http://www.w3.org/2000/svg" width="64" height="96" shape-rendering="crispEdges">
+              <!-- Capuz élfico (verde floresta) -->
+              <rect x="6" y="0" width="4" height="1" fill="#2d5a1b"/>
+              <rect x="5" y="1" width="6" height="2" fill="#2d5a1b"/>
+              <rect x="4" y="3" width="8" height="2" fill="#2d5a1b"/>
+              <!-- Cabelos escuros saindo do capuz -->
+              <rect x="4" y="5" width="2" height="2" fill="#3a2010"/>
+              <rect x="10" y="5" width="2" height="2" fill="#3a2010"/>
+              <!-- Rosto -->
+              <rect x="5" y="5" width="6" height="4" fill="#e8c99a"/>
+              <!-- Orelha élfica (pontuda) -->
+              <rect x="4" y="6" width="1" height="2" fill="#e8c99a"/>
+              <rect x="11" y="6" width="1" height="2" fill="#e8c99a"/>
+              <rect x="3" y="6" width="1" height="1" fill="#e8c99a"/>
+              <rect x="12" y="6" width="1" height="1" fill="#e8c99a"/>
+              <!-- Olhos (âmbar / castanho dourado) -->
+              <rect x="6" y="7" width="1" height="1" fill="#8b4513"/>
+              <rect x="9" y="7" width="1" height="1" fill="#8b4513"/>
+              <!-- Expressão séria (linha reta da boca) -->
+              <rect x="7" y="9" width="2" height="1" fill="#b87050"/>
+              <!-- Capa/armadura de couro (verde + marrom) -->
+              <rect x="4" y="9" width="8" height="6" fill="#4a7c2a"/>
+              <!-- Colete de couro por cima -->
+              <rect x="5" y="9" width="6" height="6" fill="#6b4423"/>
+              <!-- Divisória central -->
+              <rect x="7" y="9" width="2" height="6" fill="#4a2e10"/>
+              <!-- Correias diagonais -->
+              <rect x="5" y="10" width="3" height="1" fill="#3a1e08"/>
+              <rect x="8" y="12" width="3" height="1" fill="#3a1e08"/>
+              <!-- Braço esquerdo -->
+              <rect x="2" y="9" width="2" height="6" fill="#4a7c2a"/>
+              <!-- Arco (curvado com rects) -->
+              <rect x="0" y="5" width="1" height="13" fill="#8b5e2a"/>
+              <rect x="1" y="4" width="1" height="1" fill="#8b5e2a"/>
+              <rect x="1" y="18" width="1" height="1" fill="#8b5e2a"/>
+              <!-- Corda do arco -->
+              <rect x="1" y="5" width="1" height="1" fill="#ddd"/>
+              <rect x="1" y="8" width="1" height="1" fill="#ddd"/>
+              <rect x="1" y="11" width="1" height="1" fill="#ddd"/>
+              <rect x="1" y="14" width="1" height="1" fill="#ddd"/>
+              <rect x="1" y="17" width="1" height="1" fill="#ddd"/>
+              <!-- Braço direito (segurando corda puxada) -->
+              <rect x="12" y="9" width="2" height="4" fill="#4a7c2a"/>
+              <!-- Flecha -->
+              <rect x="2" y="11" width="10" height="1" fill="#8b5e2a"/>
+              <rect x="12" y="10" width="1" height="3" fill="#8b5e2a"/>
+              <!-- Ponta da flecha -->
+              <rect x="1" y="11" width="1" height="1" fill="#aaa"/>
+              <!-- Plumas da flecha -->
+              <rect x="12" y="10" width="2" height="1" fill="#cc2200"/>
+              <rect x="12" y="12" width="2" height="1" fill="#cc2200"/>
+              <!-- Cinto -->
+              <rect x="4" y="15" width="8" height="1" fill="#4a2e10"/>
+              <rect x="7" y="15" width="2" height="1" fill="#c8a000"/>
+              <!-- Calças de couro -->
+              <rect x="5" y="16" width="3" height="4" fill="#4a2e10"/>
+              <rect x="8" y="16" width="3" height="4" fill="#4a2e10"/>
+              <!-- Botas -->
+              <rect x="5" y="20" width="3" height="3" fill="#2d1a08"/>
+              <rect x="8" y="20" width="3" height="3" fill="#2d1a08"/>
+              <rect x="4" y="22" width="4" height="1" fill="#1a0d00"/>
+              <rect x="8" y="22" width="4" height="1" fill="#1a0d00"/>
+            </svg>
+          </div>
+          <span class="class-name">ARQUEIRO</span>
           <span class="class-desc">Agilidade<br/>e furtividade</span>
+          <div class="class-stats">
+            <span class="stat-bar" title="Força">⚔ ██░░░</span>
+            <span class="stat-bar" title="Magia">✨ ██░░░</span>
+          </div>
         </button>
 
       </div>
@@ -131,32 +265,10 @@
     </section>
 
     <!-- =============================================
-         BARRA DE PROGRESSO DE UPLOAD
-    ============================================== -->
-    <div class="progress-container" id="progress-container" style="display:none;">
-      <div class="progress-label" id="progress-label">
-        <span class="blink-cursor">█</span> Enviando ao Inventário...
-      </div>
-
-      <!-- Barra de progresso pixel art -->
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="progress-bar"></div>
-        <div class="progress-bar-segments" aria-hidden="true">
-          <!-- 10 blocos decorativos -->
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-      </div>
-
-      <!-- Log de etapas (estilo terminal) -->
-      <div class="progress-log" id="progress-log" aria-live="polite"></div>
-    </div>
-
-    <!-- =============================================
          BOTÃO PRINCIPAL
     ============================================== -->
     <button class="btn-primary btn-finalizar" id="btn-finalizar" onclick="finalizarHeroi()">
-      ✨ FINALIZAR HERÓI
+      ✨ FORJAR HERÓI
     </button>
 
     <!-- Toast de feedback -->
@@ -164,12 +276,11 @@
 
     <!-- Rodapé -->
     <footer class="tavern-footer">
-      ⚙ Taberna dos Bits v1.0 · Storage + Database via Supabase
+      ⚙ Taberna dos Bits v1.0 · Database via Supabase
     </footer>
 
   </main>
 
-  <!-- Scripts -->
   <script src="heroi.js"></script>
 </body>
 </html>

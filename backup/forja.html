@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forja do Herói — Taberna dos Bits</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <!-- CSS compartilhado da Taberna + CSS desta tela -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="heroi.css" />
+</head>
+<body>
+
+  <!-- Pixels decorativos de fundo (mesmo da tela de login) -->
+  <div class="bg-pixels" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <!-- Container principal (pergaminho) -->
+  <main class="scroll-container hero-scroll">
+
+    <!-- Cabeçalho -->
+    <header class="tavern-header">
+      <div class="tavern-icon" id="class-icon">🛡️</div>
+      <h1 class="tavern-title">Forja do<br/>Herói</h1>
+      <div class="tavern-subtitle">— Configure seu Personagem —</div>
+    </header>
+
+    <!-- Banner de missão -->
+    <div class="quest-banner">
+      <span class="quest-label">▶ MISSÃO:</span> Defina sua classe e escolha seu brasão, aventureiro!
+    </div>
+
+    <!-- =============================================
+         PASSO 1 — BRASÃO / AVATAR
+    ============================================== -->
+    <section class="config-section">
+      <h2 class="section-title">[ BRASÃO DA GUILDA ]</h2>
+
+      <!-- Área de upload estilizada -->
+      <div class="upload-arena" id="upload-arena" onclick="document.getElementById('avatar-input').click()">
+
+        <!-- Preview da imagem (oculto até seleção) -->
+        <div class="avatar-preview-wrap" id="preview-wrap" style="display:none;">
+          <div class="pixel-frame">
+            <img id="avatar-preview" src="" alt="Preview do brasão" />
+          </div>
+          <div class="preview-badge">✔ BRASÃO SELECIONADO</div>
+        </div>
+
+        <!-- Placeholder quando nenhuma imagem está selecionada -->
+        <div class="upload-placeholder" id="upload-placeholder">
+          <div class="upload-icon">🖼️</div>
+          <p class="upload-text">CLIQUE PARA<br/>CARREGAR BRASÃO</p>
+          <p class="upload-hint">PNG · JPG · WEBP · máx. 2MB</p>
+        </div>
+
+      </div>
+
+      <!-- Input de arquivo oculto -->
+      <input
+        type="file"
+        id="avatar-input"
+        accept="image/png, image/jpeg, image/webp"
+        style="display:none;"
+        onchange="handleAvatarSelect(event)"
+      />
+
+      <!-- Botão para remover imagem (aparece após seleção) -->
+      <button class="btn-secondary" id="btn-remover-avatar" style="display:none;" onclick="removerAvatar()">
+        ✖ REMOVER BRASÃO
+      </button>
+    </section>
+
+    <!-- =============================================
+         PASSO 2 — SELEÇÃO DE CLASSE
+    ============================================== -->
+    <section class="config-section">
+      <h2 class="section-title">[ ESCOLHA SUA CLASSE ]</h2>
+
+      <div class="class-grid" role="group" aria-label="Seleção de classe do herói">
+
+        <button
+          class="class-card"
+          id="class-guerreiro"
+          data-class="Guerreiro"
+          onclick="selecionarClasse('Guerreiro')"
+          aria-pressed="false"
+        >
+          <span class="class-emoji">⚔️</span>
+          <span class="class-name">GUERREIRO</span>
+          <span class="class-desc">Força e<br/>resistência</span>
+        </button>
+
+        <button
+          class="class-card"
+          id="class-mago"
+          data-class="Mago"
+          onclick="selecionarClasse('Mago')"
+          aria-pressed="false"
+        >
+          <span class="class-emoji">🧙</span>
+          <span class="class-name">MAGO</span>
+          <span class="class-desc">Magia e<br/>sabedoria</span>
+        </button>
+
+        <button
+          class="class-card"
+          id="class-ladino"
+          data-class="Ladino"
+          onclick="selecionarClasse('Ladino')"
+          aria-pressed="false"
+        >
+          <span class="class-emoji">🗡️</span>
+          <span class="class-name">LADINO</span>
+          <span class="class-desc">Agilidade<br/>e furtividade</span>
+        </button>
+
+      </div>
+
+      <!-- Indicador de classe selecionada -->
+      <div class="class-selected-info" id="class-selected-info" style="display:none;">
+        <span class="quest-label">▶ CLASSE:</span>
+        <span id="class-selected-name"></span>
+      </div>
+    </section>
+
+    <!-- =============================================
+         BARRA DE PROGRESSO DE UPLOAD
+    ============================================== -->
+    <div class="progress-container" id="progress-container" style="display:none;">
+      <div class="progress-label" id="progress-label">
+        <span class="blink-cursor">█</span> Enviando ao Inventário...
+      </div>
+
+      <!-- Barra de progresso pixel art -->
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+        <div class="progress-bar-segments" aria-hidden="true">
+          <!-- 10 blocos decorativos -->
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Log de etapas (estilo terminal) -->
+      <div class="progress-log" id="progress-log" aria-live="polite"></div>
+    </div>
+
+    <!-- =============================================
+         BOTÃO PRINCIPAL
+    ============================================== -->
+    <button class="btn-primary btn-finalizar" id="btn-finalizar" onclick="finalizarHeroi()">
+      ✨ FINALIZAR HERÓI
+    </button>
+
+    <!-- Toast de feedback -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Rodapé -->
+    <footer class="tavern-footer">
+      ⚙ Taberna dos Bits v1.0 · Storage + Database via Supabase
+    </footer>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="heroi.js"></script>
+</body>
+</html>
