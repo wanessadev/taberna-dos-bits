@@ -35,6 +35,10 @@ function esconderToast() {
 
 // --- LOGIN ---
 async function handleLogin() {
+  if (!window.supabase?.auth) {
+    mostrarToast('✖ Erro: cliente Supabase não inicializado.', 'erro');
+    return;
+  }
   const email = document.getElementById('login-email').value.trim();
   const senha = document.getElementById('login-password').value;
 
@@ -63,6 +67,10 @@ async function handleLogin() {
 
 // --- CADASTRO ---
 async function handleRegister() {
+  if (!window.supabase?.auth) {
+    mostrarToast('✖ Erro: cliente Supabase não inicializado.', 'erro');
+    return;
+  }
   const nome    = document.getElementById('reg-name').value.trim();
   const email   = document.getElementById('reg-email').value.trim();
   const senha   = document.getElementById('reg-password').value;
@@ -97,4 +105,9 @@ async function handleRegister() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => switchTab('login'));
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.supabase) {
+    console.error('⚠ Supabase não encontrado. Verifique a ordem dos scripts no HTML.');
+  }
+  switchTab('login');
+});
