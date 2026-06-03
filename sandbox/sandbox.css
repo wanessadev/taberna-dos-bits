@@ -13,11 +13,27 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #000;
+}
+
+/* Cena de Fundo Centralizada de Aspect Ratio Fixo */
+.scene-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vmax;
+  height: 100vmax;
+  background: url('taverna_forja_bg.png') no-repeat center center;
+  background-size: 100% 100%;
+  z-index: 1;
+  pointer-events: none;
+  image-rendering: pixelated; /* ou auto */
 }
 
 .sandbox-container {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   width: 100vw;
   height: 100vh;
   max-width: none;
@@ -26,16 +42,12 @@ html, body {
   border-radius: 0;
   box-shadow: none;
   padding: 16px;
-  
-  /* Imagem de Fundo Gerada da Forja da Taberna */
-  background: url('taverna_forja_bg.png') no-repeat center center;
-  background-size: cover;
-  image-rendering: auto; /* auto para imagens 3D/ilustrações complexas */
-  
+  background: transparent;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 16px;
+  pointer-events: none; /* Deixa cliques passarem para a cena de fundo */
 }
 
 /* Painéis de Vidro Fosco (Glassmorphism) */
@@ -60,6 +72,7 @@ html, body {
   justify-content: space-between;
   height: 100%;
   z-index: 10;
+  pointer-events: auto; /* Permite cliques */
 }
 
 .panel-box {
@@ -170,18 +183,20 @@ html, body {
   height: 100%;
 }
 
-/* A Forja gigante no background da cena */
+/* A Forja gigante no background da cena (Alinhada com o fogo) */
 .forge-container {
   position: absolute;
-  top: 6%;
-  width: 420px;
-  height: 420px;
+  left: 40.5%;
+  top: 53.6%;
+  transform: translate(-50%, -50%);
+  width: 32%;
+  height: 32%;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.4));
+  filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.4));
 }
 
 .forge-container svg {
@@ -189,15 +204,18 @@ html, body {
   height: 100%;
 }
 
-/* A Bigorna de cliques no primeiro plano */
+/* A Bigorna de cliques no primeiro plano (Alinhada com a bigorna do bg) */
 .anvil-click-zone {
   position: absolute;
-  bottom: 24px;
+  left: 40.5%;
+  top: 78.5%;
+  transform: translate(-50%, -50%);
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  pointer-events: auto; /* Permite cliques */
 }
 
 .anvil-wrapper {
@@ -206,11 +224,18 @@ html, body {
 }
 
 .anvil-wrapper svg {
-  filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.6));
+  width: 13vmax;
+  height: 13vmax;
+  max-width: 180px;
+  max-height: 180px;
+  min-width: 100px;
+  min-height: 100px;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.65));
+  transition: transform 0.05s ease;
 }
 
 .anvil-wrapper:active svg {
-  transform: scale(0.92) translateY(6px);
+  transform: scale(0.92) translateY(5px);
 }
 
 .click-instructions {
@@ -231,6 +256,7 @@ html, body {
   padding: 16px;
   height: 100%;
   z-index: 10;
+  pointer-events: auto; /* Permite cliques */
 }
 
 .hud-header {
@@ -504,4 +530,113 @@ html, body {
 @keyframes floatUpToast {
   from { transform: translateY(20px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ============================================================
+   SOBREPOSIÇÃO DE MODAIS (POPUP FIXES)
+   ============================================================ */
+.modal-overlay {
+  display: none; /* Escondido por padrão */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.78);
+  z-index: 9999; /* Fica acima de tudo */
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto; /* Reativa cliques */
+}
+
+.modal-card {
+  background: rgba(26, 14, 0, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  box-shadow: 8px 8px 0 #000;
+  border-radius: 4px;
+  color: var(--cor-texto);
+  font-family: 'Press Start 2P', monospace;
+  animation: modalAppear 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+}
+
+@keyframes modalAppear {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.mini-modal {
+  width: 90%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid var(--cor-borda);
+  padding: 14px 16px;
+}
+
+.modal-header h2 {
+  font-size: 8px;
+  margin: 0;
+  color: var(--cor-texto);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--cor-texto-dim);
+}
+
+.modal-close:hover {
+  color: var(--cor-erro);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.btn-primary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 10px 14px;
+  background-color: var(--cor-primaria);
+  color: #000;
+  border: 3px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--cor-primaria-hover);
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.btn-primary:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+.status-value {
+  color: var(--cor-dourado);
+  font-weight: bold;
 }

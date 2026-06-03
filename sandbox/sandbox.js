@@ -47,36 +47,42 @@ let currentHudTab = 'market'; // 'market' ou 'arsenal'
 const FORGE_SVGS = {
   MADEIRA: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="16" y="24" width="32" height="32" fill="#555"/>
-      <rect x="14" y="28" width="36" height="28" fill="#444"/>
+      <!-- Colunas de suporte de madeira rústica nas laterais -->
       <rect x="10" y="24" width="6" height="32" fill="#5a3d28"/>
       <rect x="8" y="28" width="2" height="28" fill="#422c1d"/>
       <rect x="48" y="24" width="6" height="32" fill="#5a3d28"/>
       <rect x="54" y="28" width="2" height="28" fill="#422c1d"/>
+      <!-- Viga superior de madeira -->
       <rect x="8" y="20" width="48" height="6" fill="#6d4930"/>
       <rect x="12" y="22" width="4" height="2" fill="#321e10"/>
       <rect x="40" y="21" width="3" height="1" fill="#321e10"/>
-      <rect x="22" y="32" width="20" height="24" fill="#000"/>
+      <!-- Obscurecimento suave da fornalha nativa para destacar o fogo -->
+      <rect x="20" y="32" width="24" height="24" fill="#000" opacity="0.3"/>
+      <!-- Fogo animado personalizado -->
       <g class="fire-layer">
-        <path d="M26,56 Q32,36 38,56 Z" fill="#d946ef"/>
+        <path d="M26,56 Q32,36 38,56 Z" fill="#d946ef" opacity="0.85"/>
         <path d="M27,56 Q32,42 37,56 Z" fill="#ea580c"/>
         <path d="M29,56 Q32,48 35,56 Z" fill="#facc15"/>
       </g>
-      <rect x="16" y="26" width="4" height="1" fill="#bbb" opacity="0.5"/>
-      <rect x="16" y="27" width="1" height="4" fill="#bbb" opacity="0.5"/>
     </svg>
   `,
   PEDRA: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="16" y="16" width="32" height="40" fill="#7a828a"/>
-      <rect x="12" y="24" width="40" height="32" fill="#61686e"/>
-      <rect x="8" y="36" width="48" height="20" fill="#474d52"/>
-      <rect x="24" y="0" width="16" height="16" fill="#7a828a"/>
-      <rect x="22" y="2" width="20" height="3" fill="#474d52"/>
-      <rect x="18" y="20" width="6" height="3" fill="#9ca3af"/>
-      <rect x="40" y="28" width="6" height="3" fill="#9ca3af"/>
-      <rect x="14" y="44" width="8" height="4" fill="#374151"/>
-      <rect x="20" y="30" width="24" height="26" fill="#000"/>
+      <!-- Colunas de pedra lavrada cinza -->
+      <rect x="10" y="24" width="6" height="32" fill="#7a828a"/>
+      <rect x="8" y="28" width="2" height="28" fill="#474d52"/>
+      <rect x="48" y="24" width="6" height="32" fill="#7a828a"/>
+      <rect x="54" y="28" width="2" height="28" fill="#474d52"/>
+      <!-- Viga superior de pedra cinza -->
+      <rect x="8" y="20" width="48" height="6" fill="#61686e"/>
+      <rect x="12" y="22" width="4" height="2" fill="#374151"/>
+      <rect x="42" y="21" width="3" height="1" fill="#374151"/>
+      <!-- Detalhes de pedra rachada -->
+      <rect x="11" y="32" width="2" height="4" fill="#474d52"/>
+      <rect x="51" y="40" width="2" height="4" fill="#474d52"/>
+      <!-- Fundo escuro do nicho -->
+      <rect x="20" y="30" width="24" height="26" fill="#000" opacity="0.45"/>
+      <!-- Fogo de Pedra (Chamas Laranja e Amarelas Fortes) -->
       <g class="fire-layer">
         <path d="M24,56 Q32,28 40,56 Z" fill="#ea580c"/>
         <path d="M26,56 Q32,36 38,56 Z" fill="#f97316"/>
@@ -86,79 +92,123 @@ const FORGE_SVGS = {
   `,
   COBRE: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="16" y="16" width="32" height="40" fill="#7a828a"/>
-      <rect x="12" y="24" width="40" height="32" fill="#61686e"/>
-      <rect x="8" y="36" width="48" height="20" fill="#474d52"/>
-      <rect x="24" y="0" width="16" height="16" fill="#7a828a"/>
-      <rect x="20" y="10" width="24" height="4" fill="#b45309"/>
-      <rect x="22" y="8" width="20" height="2" fill="#d97706"/>
-      <rect x="10" y="24" width="4" height="32" fill="#b45309"/>
-      <rect x="50" y="24" width="4" height="32" fill="#b45309"/>
-      <rect x="11" y="28" width="2" height="2" fill="#f59e0b"/>
-      <rect x="11" y="40" width="2" height="2" fill="#f59e0b"/>
-      <rect x="51" y="28" width="2" height="2" fill="#f59e0b"/>
-      <rect x="51" y="40" width="2" height="2" fill="#f59e0b"/>
-      <rect x="20" y="28" width="24" height="28" fill="#000"/>
+      <!-- Tubos e Colunas de Cobre Brilhante -->
+      <rect x="10" y="22" width="6" height="34" fill="#b45309"/>
+      <rect x="11" y="22" width="2" height="34" fill="#f59e0b"/>
+      <rect x="48" y="22" width="6" height="34" fill="#b45309"/>
+      <rect x="51" y="22" width="2" height="34" fill="#f59e0b"/>
+      <!-- Viga superior com canos horizontais -->
+      <rect x="8" y="18" width="48" height="4" fill="#b45309"/>
+      <rect x="8" y="19" width="48" height="1.5" fill="#f59e0b"/>
+      <!-- Válvulas e Medidores (Gauges) -->
+      <!-- Indicador Esquerdo -->
+      <rect x="12" y="30" width="4" height="4" fill="#374151"/>
+      <rect x="13" y="31" width="2" height="2" fill="#fff"/>
+      <rect x="14" y="31" width="1" height="1" fill="#ef4444"/>
+      <!-- Indicador Direito -->
+      <rect x="48" y="38" width="4" height="4" fill="#374151"/>
+      <rect x="49" y="39" width="2" height="2" fill="#fff"/>
+      <!-- Fundo de calor e chamas com tons verdes/cobre -->
+      <rect x="20" y="28" width="24" height="28" fill="#000" opacity="0.45"/>
       <g class="fire-layer">
-        <path d="M22,56 Q32,24 42,56 Z" fill="#e11d48"/>
+        <path d="M22,56 Q32,24 42,56 Z" fill="#b45309"/>
         <path d="M24,56 Q32,30 40,56 Z" fill="#ea580c"/>
-        <path d="M27,56 Q32,40 37,56 Z" fill="#facc15"/>
+        <path d="M27,56 Q32,40 37,56 Z" fill="#34d399"/> <!-- Chamas verde-cobre mágicas -->
       </g>
     </svg>
   `,
   FERRO: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="14" y="12" width="36" height="44" fill="#374151"/>
-      <rect x="10" y="20" width="44" height="36" fill="#1f2937"/>
-      <rect x="6" y="32" width="52" height="24" fill="#111827"/>
-      <rect x="22" y="0" width="20" height="12" fill="#374151"/>
-      <rect x="20" y="4" width="24" height="3" fill="#111827"/>
-      <rect x="20" y="9" width="24" height="3" fill="#111827"/>
-      <rect x="14" y="22" width="6" height="6" fill="#4b5563"/>
-      <rect x="44" y="22" width="6" height="6" fill="#4b5563"/>
-      <rect x="18" y="26" width="28" height="30" fill="#000"/>
+      <!-- Colunas e Vigas de Ferro Fundido -->
+      <rect x="10" y="20" width="6" height="36" fill="#1f2937"/>
+      <rect x="12" y="20" width="2" height="36" fill="#4b5563"/>
+      <rect x="48" y="20" width="6" height="36" fill="#1f2937"/>
+      <rect x="50" y="20" width="2" height="36" fill="#4b5563"/>
+      <!-- Viga transversal superior com rebites -->
+      <rect x="8" y="16" width="48" height="6" fill="#111827"/>
+      <rect x="8" y="17" width="48" height="1" fill="#4b5563"/>
+      <!-- Rebites nas colunas -->
+      <rect x="12" y="24" width="2" height="2" fill="#4b5563"/>
+      <rect x="12" y="38" width="2" height="2" fill="#4b5563"/>
+      <rect x="50" y="24" width="2" height="2" fill="#4b5563"/>
+      <rect x="50" y="38" width="2" height="2" fill="#4b5563"/>
+      <!-- Correntes de Ferro suspensas nas laterais -->
+      <path d="M12,22 C15,25 15,29 12,32" stroke="#4b5563" stroke-width="1.5" fill="none"/>
+      <path d="M52,22 C49,25 49,29 52,32" stroke="#4b5563" stroke-width="1.5" fill="none"/>
+      <!-- Grelha protetora de Ferro (Grate) na frente do fogo -->
+      <rect x="22" y="44" width="20" height="2" fill="#374151"/>
+      <rect x="22" y="52" width="20" height="2" fill="#374151"/>
+      <rect x="24" y="42" width="2" height="14" fill="#1f2937"/>
+      <rect x="29" y="42" width="2" height="14" fill="#1f2937"/>
+      <rect x="34" y="42" width="2" height="14" fill="#1f2937"/>
+      <rect x="39" y="42" width="2" height="14" fill="#1f2937"/>
+      <!-- Fundo e fogo de alta temperatura (Chamas de Ferro Azuladas) -->
+      <rect x="20" y="26" width="24" height="30" fill="#000" opacity="0.4"/>
       <g class="fire-layer">
         <path d="M20,56 Q32,20 44,56 Z" fill="#ea580c"/>
         <path d="M23,56 Q32,28 41,56 Z" fill="#facc15"/>
-        <path d="M26,56 Q32,45 38,56 Z" fill="#60a5fa"/>
+        <path d="M26,56 Q32,45 38,56 Z" fill="#3b82f6"/> <!-- Núcleo azul ultra quente -->
       </g>
     </svg>
   `,
   OURO: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="14" y="12" width="36" height="44" fill="#d97706"/>
-      <rect x="10" y="20" width="44" height="36" fill="#f59e0b"/>
-      <rect x="6" y="32" width="52" height="24" fill="#d97706"/>
-      <rect x="22" y="0" width="20" height="12" fill="#f59e0b"/>
-      <rect x="18" y="0" width="28" height="3" fill="#fbbf24"/>
-      <rect x="8" y="20" width="4" height="36" fill="#fbbf24"/>
-      <rect x="52" y="20" width="4" height="36" fill="#fbbf24"/>
-      <rect x="9" y="30" width="2" height="4" fill="#dc2626"/>
-      <rect x="53" y="30" width="2" height="4" fill="#dc2626"/>
-      <rect x="18" y="26" width="28" height="30" fill="#000"/>
+      <!-- Moldura e Colunata de Ouro Maciço Real com detalhes dourados -->
+      <rect x="10" y="20" width="6" height="36" fill="#d97706"/>
+      <rect x="11" y="20" width="4" height="36" fill="#fbbf24"/>
+      <rect x="12" y="20" width="1.5" height="36" fill="#fef08a"/>
+      <rect x="48" y="20" width="6" height="36" fill="#d97706"/>
+      <rect x="49" y="20" width="4" height="36" fill="#fbbf24"/>
+      <rect x="50" y="20" width="1.5" height="36" fill="#fef08a"/>
+      <!-- Entablamento Dourado Superior -->
+      <rect x="8" y="15" width="48" height="6" fill="#d97706"/>
+      <rect x="8" y="16" width="48" height="2" fill="#fbbf24"/>
+      <rect x="8" y="18" width="48" height="1" fill="#fef08a"/>
+      <!-- Gemas Vermelhas (Rubis) lapidadas engastadas nas colunas -->
+      <polygon points="13,28 15,26 15,30" fill="#ef4444"/>
+      <rect x="13" y="27" width="1" height="2" fill="#fecaca"/>
+      <polygon points="51,28 49,26 49,30" fill="#ef4444"/>
+      <rect x="50" y="27" width="1" height="2" fill="#fecaca"/>
+      <!-- Adorno em Arco de Filigrana -->
+      <path d="M16,21 Q32,16 48,21" stroke="#fbbf24" stroke-width="1.5" fill="none"/>
+      <!-- Fundo brilhante e fogo radiante de Ouro -->
+      <rect x="18" y="26" width="28" height="30" fill="#000" opacity="0.45"/>
       <g class="fire-layer">
         <path d="M20,56 Q32,18 44,56 Z" fill="#dc2626"/>
         <path d="M22,56 Q32,25 42,56 Z" fill="#f97316"/>
-        <path d="M25,56 Q32,32 39,56 Z" fill="#fef08a"/>
+        <path d="M25,56 Q32,32 39,56 Z" fill="#fbbf24"/>
       </g>
     </svg>
   `,
   CRISTAL: `
     <svg viewBox="0 0 64 64" shape-rendering="crispEdges">
-      <rect x="14" y="12" width="36" height="44" fill="#2d004d"/>
-      <rect x="10" y="20" width="44" height="36" fill="#1a0033"/>
-      <rect x="6" y="32" width="52" height="24" fill="#0c001f"/>
-      <rect x="22" y="0" width="20" height="12" fill="#2d004d"/>
-      <rect x="20" y="4" width="24" height="4" fill="#9d4edd"/>
-      <polygon points="6,40 10,32 10,48" fill="#a2d2ff" class="magical-glow"/>
-      <polygon points="58,40 54,32 54,48" fill="#a2d2ff" class="magical-glow"/>
-      <polygon points="10,24 14,18 14,30" fill="#c77dff" class="magical-glow"/>
-      <polygon points="54,24 50,18 50,30" fill="#c77dff" class="magical-glow"/>
-      <rect x="18" y="26" width="28" height="30" fill="#000"/>
+      <!-- Pilares Rúnicos de Rocha Negra / Obsidiana com Cristais Roxo -->
+      <rect x="10" y="20" width="6" height="36" fill="#1a0033"/>
+      <rect x="48" y="20" width="6" height="36" fill="#1a0033"/>
+      <!-- Cristais mágicos emergindo nas laterais -->
+      <!-- Esquerda: Cristal Roxo e Azul Celeste -->
+      <polygon points="10,24 3,20 10,28" fill="#c77dff" opacity="0.9"/>
+      <polygon points="10,24 6,22 10,26" fill="#e0aaff"/>
+      <polygon points="10,38 1,36 10,42" fill="#60a5fa" opacity="0.9"/>
+      <polygon points="10,38 5,37 10,40" fill="#e0f2fe"/>
+      <!-- Direita: Cristal Roxo e Azul Celeste -->
+      <polygon points="54,24 61,20 54,28" fill="#c77dff" opacity="0.9"/>
+      <polygon points="54,24 58,22 54,26" fill="#e0aaff"/>
+      <polygon points="54,38 63,36 54,42" fill="#60a5fa" opacity="0.9"/>
+      <polygon points="54,38 59,37 54,40" fill="#e0f2fe"/>
+      <!-- Lintéis de Obsidiana com Runas mágicas gravadas e brilhantes -->
+      <rect x="8" y="15" width="48" height="6" fill="#2d004d"/>
+      <rect x="14" y="17" width="3" height="2" fill="#a5f3fc" opacity="0.85"/>
+      <rect x="22" y="17" width="2" height="2" fill="#a5f3fc" opacity="0.85"/>
+      <rect x="30" y="17" width="4" height="2" fill="#a5f3fc" opacity="0.85"/>
+      <rect x="40" y="17" width="2" height="2" fill="#a5f3fc" opacity="0.85"/>
+      <rect x="46" y="17" width="3" height="2" fill="#a5f3fc" opacity="0.85"/>
+      <!-- Fundo de energia mágica e fogo cósmico (Roxo, Ciano e Lilás) -->
+      <rect x="18" y="26" width="28" height="30" fill="#000" opacity="0.5"/>
       <g class="fire-layer">
         <path d="M20,56 Q32,15 44,56 Z" fill="#7b2cbf"/>
-        <path d="M22,56 Q32,25 42,56 Z" fill="#3a86c8"/>
-        <path d="M25,56 Q32,35 39,56 Z" fill="#e0aaff"/>
+        <path d="M22,56 Q32,25 42,56 Z" fill="#2563eb"/>
+        <path d="M25,56 Q32,35 39,56 Z" fill="#c084fc"/>
       </g>
     </svg>
   `

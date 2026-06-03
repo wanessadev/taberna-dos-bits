@@ -17,35 +17,8 @@
   <!-- Container Horizontal Principal (Fullscreen) -->
   <main class="sandbox-container">
 
-    <!-- Seção Esquerda: Melhorias Ativas & Poster de Missões -->
-    <div class="left-section">
-      <!-- Painel de slots equipados -->
-      <div class="panel-box glass-panel">
-        <div class="panel-section-title">[ ATIVOS ]</div>
-        <div class="active-upgrades-grid">
-          <div class="active-upgrade-slot" id="slot-0" title="Vazio"></div>
-          <div class="active-upgrade-slot" id="slot-1" title="Vazio"></div>
-          <div class="active-upgrade-slot" id="slot-2" title="Vazio"></div>
-          <div class="active-upgrade-slot" id="slot-3" title="Vazio"></div>
-        </div>
-        <div class="passive-gold-info">
-          <div class="passive-gold-label">GPS (PASSIVO)</div>
-          <div class="passive-gold-value">🪙 <span id="passive-gold-rate">0</span>/h</div>
-        </div>
-      </div>
-
-      <!-- Poster Rústico de Missões (Link) -->
-      <a href="../missoes.html" class="missions-poster" title="Ir para o Mural de Missões">
-        <div class="poster-border">
-          <div class="poster-icon">📜</div>
-          <div class="poster-title">MURAL DE<br>MISSÕES</div>
-          <div class="poster-footer">▶ IR AGORA</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Seção Central: A Forja (Fundo) e a Bigorna (Frente) -->
-    <div class="center-section">
+    <!-- Cena de Fundo Interativa (Alinhada com o Fundo 1024x1024) -->
+    <div class="scene-background">
       <!-- Forja SVG (Aparência evolutiva) -->
       <div class="forge-container" id="forge-container">
         <!-- Injetado via JS -->
@@ -88,6 +61,36 @@
         <div class="click-instructions">CLIQUE NA BIGORNA P/ FORJAR!</div>
       </div>
     </div>
+
+    <!-- Seção Esquerda: Melhorias Ativas & Poster de Missões -->
+    <div class="left-section">
+      <!-- Painel de slots equipados -->
+      <div class="panel-box glass-panel">
+        <div class="panel-section-title">[ ATIVOS ]</div>
+        <div class="active-upgrades-grid">
+          <div class="active-upgrade-slot" id="slot-0" title="Vazio"></div>
+          <div class="active-upgrade-slot" id="slot-1" title="Vazio"></div>
+          <div class="active-upgrade-slot" id="slot-2" title="Vazio"></div>
+          <div class="active-upgrade-slot" id="slot-3" title="Vazio"></div>
+        </div>
+        <div class="passive-gold-info">
+          <div class="passive-gold-label">GPS (PASSIVO)</div>
+          <div class="passive-gold-value">🪙 <span id="passive-gold-rate">0</span>/h</div>
+        </div>
+      </div>
+
+      <!-- Poster Rústico de Missões (Link) -->
+      <a href="../missoes.html" class="missions-poster" title="Ir para o Mural de Missões">
+        <div class="poster-border">
+          <div class="poster-icon">📜</div>
+          <div class="poster-title">MURAL DE<br>MISSÕES</div>
+          <div class="poster-footer">▶ IR AGORA</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Seção Central: Espaçador Transparente para o Layout Flex -->
+    <div class="center-section" style="flex: 1; pointer-events: none;"></div>
 
     <!-- Seção Direita: O Painel de Status & Controle de Upgrades (HUD Integrado) -->
     <div class="right-section glass-panel">
