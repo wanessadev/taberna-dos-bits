@@ -1,137 +1,76 @@
 /* ============================================================
    sandbox.css — Taberna dos Bits
-   Estilo de Protótipo: Idle Clicker de Forja (Horizontal)
+   Estilo de Protótipo: Fullscreen Tavern & Forge HUD
    ============================================================ */
 
-/* Enforce widescreen landscape on large screens */
-.sandbox-container {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 960px; /* Mais largo para caber o layout horizontal */
-  background-color: var(--cor-pergaminho);
-  border: 4px solid var(--cor-borda);
-  outline: 4px solid #000;
-  padding: 24px;
-  image-rendering: pixelated;
-  box-shadow:
-    8px  8px 0 0 #000,
-    12px 12px 0 0 rgba(139, 94, 26, 0.4);
-  animation: aparecer 0.3s steps(6, end) both;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* ---------- TOPO DA SANDBOX ---------- */
-.sandbox-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 4px solid var(--cor-borda);
-  padding-bottom: 14px;
-}
-
-.header-btn {
-  font-family: inherit;
-  font-size: 14px;
-  background-color: #1a0e00;
-  color: var(--cor-texto-dim);
-  border: 3px solid var(--cor-borda);
-  outline: 3px solid #000;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
+/* ---------- CONFIGURAÇÃO FULLSCREEN ---------- */
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 2px 2px 0 #000;
 }
 
-.header-btn:hover {
-  background-color: #2e1a00;
-  color: var(--cor-dourado);
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 #000;
-}
-
-.header-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: none;
-}
-
-/* Barra de XP */
-.xp-bar-container {
-  flex: 1;
-  max-width: 440px;
-  margin: 0 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.rank-name {
-  font-size: 8px;
-  color: var(--cor-dourado);
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.xp-progress-bar {
-  width: 100%;
-  height: 16px;
-  background-color: #000;
-  border: 3px solid var(--cor-borda);
-  outline: 3px solid #000;
+.sandbox-container {
   position: relative;
-  overflow: hidden;
-}
-
-.xp-fill {
-  height: 100%;
-  background-color: var(--cor-primaria);
-  width: 0%;
-  transition: width 0.2s steps(5);
-}
-
-.xp-text {
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-}
-
-/* ---------- ÁREA DE JOGO CENTRAL ---------- */
-.game-area {
-  display: grid;
-  grid-template-columns: 210px 1fr 210px;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 16px;
+  
+  /* Imagem de Fundo Gerada da Forja da Taberna */
+  background: url('taverna_forja_bg.png') no-repeat center center;
+  background-size: cover;
+  image-rendering: auto; /* auto para imagens 3D/ilustrações complexas */
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 16px;
-  min-height: 320px;
 }
 
-.left-panel, .right-panel {
-  background-color: #0c0700;
+/* Painéis de Vidro Fosco (Glassmorphism) */
+.glass-panel {
+  background: rgba(28, 15, 2, 0.84);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 4px solid var(--cor-borda);
   outline: 4px solid #000;
-  padding: 16px 12px;
+  box-shadow: 6px 6px 0 #000;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   SEÇÃO ESQUERDA (ATIVOS & MISSÕES)
+   ============================================================ */
+.left-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 220px;
+  gap: 16px;
+  justify-content: space-between;
+  height: 100%;
+  z-index: 10;
+}
+
+.panel-box {
+  padding: 18px 12px 14px;
   text-align: center;
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9);
 }
 
-.panel-section-title {
-  font-size: 7px;
-  color: var(--cor-texto-dim);
-  margin-bottom: 16px;
-  letter-spacing: 1px;
-}
-
-/* Slots de Upgrade */
 .active-upgrades-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   margin-bottom: 16px;
 }
@@ -140,482 +79,429 @@
   aspect-ratio: 1;
   border: 3px solid var(--cor-borda);
   outline: 3px solid #000;
-  background-color: #1a0e00;
+  background-color: #0f0800;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  box-shadow: inset 0 0 6px #000;
+  font-size: 18px;
+  box-shadow: inset 0 0 8px #000;
   position: relative;
 }
 
 .active-upgrade-slot.equipped {
   background-color: #0a2e14;
   border-color: var(--cor-primaria);
-  animation: pulsingSlot 2s infinite ease-in-out;
+  animation: pulseEquippedSlot 2.5s infinite ease-in-out;
 }
 
-@keyframes pulsingSlot {
-  0%, 100% { border-color: var(--cor-primaria); }
-  50%       { border-color: var(--cor-primaria-hover); }
+@keyframes pulseEquippedSlot {
+  0%, 100% { border-color: var(--cor-borda); }
+  50%       { border-color: var(--cor-primaria); }
 }
 
 .passive-gold-info {
-  margin-top: 8px;
-  font-size: 6px;
+  margin-top: 4px;
+  font-size: 7px;
   color: var(--cor-texto-dim);
   line-height: 1.6;
 }
 
 .passive-gold-value {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--cor-dourado);
   margin-top: 4px;
 }
 
-.gold-counter-box {
-  margin-top: auto;
-  border-top: 3px dashed var(--cor-borda);
-  padding-top: 14px;
-  width: 100%;
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-}
-
-.gold-value {
-  font-size: 10px;
-  color: var(--cor-dourado);
-  font-weight: bold;
-  margin-top: 6px;
-}
-
-/* Painel da Bigorna */
-.center-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #0c0700;
-  border: 4px solid var(--cor-borda);
+/* Poster de Missões Rústico */
+.missions-poster {
+  text-decoration: none;
+  display: block;
+  background-color: #cfa169;
+  border: 4px solid #5a3d28;
   outline: 4px solid #000;
-  position: relative;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9);
+  box-shadow: 4px 4px 0 #000;
+  color: #321e10;
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transform: rotate(-2deg);
+  transition: transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.15s ease;
+  margin-bottom: 12px;
 }
 
-.anvil-click-zone {
+.missions-poster:hover {
+  transform: rotate(0deg) scale(1.06);
+  box-shadow: 8px 8px 0 #000;
+  border-color: #785236;
+}
+
+.poster-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.poster-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  font-weight: bold;
+  line-height: 1.8;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.poster-footer {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: #a82e00;
+  font-weight: bold;
+  animation: blinkText 1.5s steps(1, end) infinite;
+}
+
+/* ============================================================
+   SEÇÃO CENTRAL (CENA DA FORJA E BIGORNA)
+   ============================================================ */
+.center-section {
+  flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  height: 100%;
+}
+
+/* A Forja gigante no background da cena */
+.forge-container {
+  position: absolute;
+  top: 6%;
+  width: 420px;
+  height: 420px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.4));
+}
+
+.forge-container svg {
   width: 100%;
   height: 100%;
 }
 
-.click-instructions {
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-  letter-spacing: 0.5px;
-  animation: blinkText 1.5s steps(1, end) infinite;
-}
-
-@keyframes blinkText {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+/* A Bigorna de cliques no primeiro plano */
+.anvil-click-zone {
+  position: absolute;
+  bottom: 24px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .anvil-wrapper {
   cursor: pointer;
-  position: relative;
-  transition: transform 0.05s ease;
   user-select: none;
 }
 
 .anvil-wrapper svg {
-  display: block;
+  filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.6));
 }
 
 .anvil-wrapper:active svg {
   transform: scale(0.92) translateY(6px);
 }
 
-/* Faíscas e números flutuantes */
-.floating-points {
-  position: absolute;
-  color: var(--cor-dourado);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  font-weight: bold;
-  pointer-events: none;
-  animation: floatUpAndFade 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
-  text-shadow: 2px 2px 0 #000;
-  z-index: 50;
-}
-
-@keyframes floatUpAndFade {
-  0% {
-    transform: translateY(0) scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-80px) scale(1.1);
-    opacity: 0;
-  }
-}
-
-/* Painel da Forja */
-.forge-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-}
-
-.forge-container svg {
-  display: block;
-  max-width: 100%;
-}
-
-/* Animações de Fogo no SVG da Forja */
-.fire-layer {
-  animation: fireFlicker 0.2s steps(2, end) infinite;
-  transform-origin: bottom center;
-}
-
-@keyframes fireFlicker {
-  0%, 100% { transform: scaleY(1)   scaleX(1);   opacity: 0.9; }
-  50%       { transform: scaleY(1.15) scaleX(0.95); opacity: 1;   }
-}
-
-.magical-glow {
-  animation: pulseGlow 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes pulseGlow {
-  from { opacity: 0.4; }
-  to   { opacity: 1; }
-}
-
-/* ---------- INFERIOR / MESA ---------- */
-.sandbox-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 4px solid var(--cor-borda);
-  padding-top: 16px;
-}
-
-.shelf-buttons {
-  display: flex;
-  gap: 16px;
-}
-
-.shelf-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  padding: 12px 16px;
-  border: 4px solid #000;
-  cursor: pointer;
-  box-shadow: 4px 4px 0 #000;
-  transition: transform 0.05s ease;
-}
-
-.shelf-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 #000;
-}
-
-.shelf-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
-}
-
-.btn-market {
-  background-color: var(--cor-primaria);
-  color: #000;
-}
-
-.btn-arsenal {
-  background-color: #2563eb;
-  color: #fff;
-}
-
-.btn-debug {
-  font-family: 'Press Start 2P', monospace;
+.click-instructions {
   font-size: 6px;
-  padding: 8px 10px;
-  background-color: var(--cor-erro);
   color: #fff;
-  border: 3px solid #000;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 #000;
-}
-
-.btn-debug:hover {
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 #000;
-}
-
-.btn-debug:active {
-  transform: translate(3px, 3px);
-  box-shadow: none;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 0 #000;
+  animation: blinkText 1.5s steps(1, end) infinite;
 }
 
 /* ============================================================
-   MODAIS (POPUPS)
+   SEÇÃO DIREITA (HUD INTEGRADO - SCROLL / PARCHMENT)
    ============================================================ */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 16px;
-}
-
-.modal-overlay.active {
-  display: flex;
-}
-
-.modal-card {
-  background-color: var(--cor-pergaminho);
-  border: 4px solid var(--cor-borda);
-  outline: 4px solid #000;
-  width: 100%;
-  max-width: 660px;
-  box-shadow: 8px 8px 0 #000;
+.right-section {
+  width: 320px;
   display: flex;
   flex-direction: column;
-  animation: aparecer 0.25s steps(5, end) both;
+  padding: 16px;
+  height: 100%;
+  z-index: 10;
 }
 
-.modal-card.mini-modal {
-  max-width: 360px;
-}
-
-.modal-header {
+.hud-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 4px solid var(--cor-borda);
-  padding: 12px 16px;
-}
-
-.modal-header h2 {
-  font-size: 9px;
-  color: var(--cor-dourado);
-  letter-spacing: 1px;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--cor-texto-dim);
-  font-size: 8px;
-  cursor: pointer;
-}
-
-.modal-close:hover {
-  color: var(--cor-erro);
-}
-
-.modal-body-split {
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  height: 280px;
-}
-
-/* Grid de Upgrades */
-.modal-grid {
-  padding: 16px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  overflow-y: auto;
-  align-content: start;
-}
-
-.upgrade-item-card {
-  border: 3px solid var(--cor-borda);
-  outline: 3px solid #000;
-  background-color: #0f0800;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 4px;
-  box-shadow: 2px 2px 0 #000;
-  text-align: center;
-}
-
-.upgrade-item-card:hover {
-  background-color: #1a0e00;
-  border-color: var(--cor-texto);
-}
-
-.upgrade-item-card.selected {
-  background-color: #2e1a00;
-  border-color: var(--cor-dourado);
-  box-shadow: inset 0 0 6px #000;
-}
-
-.upgrade-item-card.equipped {
-  border-color: var(--cor-primaria);
-}
-
-.item-icon {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.item-cost {
-  font-size: 5px;
-  color: var(--cor-dourado);
-  margin-top: 4px;
-}
-
-.item-count {
-  font-size: 5px;
-  color: var(--cor-texto-dim);
-  margin-top: 2px;
-}
-
-/* Painel lateral de Detalhes */
-.modal-info-panel {
-  border-left: 4px solid var(--cor-borda);
-  background-color: #0c0700;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  overflow-y: auto;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.9);
-}
-
-.info-empty {
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-  margin: auto;
-  line-height: 2;
-}
-
-.info-icon {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-.info-title {
-  font-size: 8px;
-  color: var(--cor-dourado);
-  margin-bottom: 8px;
-  line-height: 1.4;
-  letter-spacing: 0.5px;
-}
-
-.info-desc {
-  font-size: 6px;
-  color: var(--cor-texto-dim);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-
-.info-stats {
-  font-size: 6px;
-  color: var(--cor-texto);
-  line-height: 1.6;
-  width: 100%;
-  border-top: 1px dashed var(--cor-borda);
-  padding-top: 10px;
+  padding-bottom: 10px;
   margin-bottom: 14px;
-  text-align: left;
 }
 
-.info-stat-line {
-  margin-bottom: 4px;
+.hud-title {
+  font-size: 9px;
+  color: var(--cor-texto);
+  font-weight: bold;
 }
 
-.info-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  width: 100%;
-  padding: 10px;
-  border: 3px solid #000;
+.hud-btn {
+  font-family: inherit;
+  font-size: 10px;
+  background-color: #1a0e00;
+  color: var(--cor-texto-dim);
+  border: 2px solid var(--cor-borda);
+  outline: 2px solid #000;
   cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 2px 2px 0 #000;
-  margin-top: auto;
 }
 
-.info-btn:hover {
+.hud-btn:hover {
+  color: var(--cor-dourado);
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #000;
 }
 
-.info-btn:active {
+.hud-btn:active {
   transform: translate(2px, 2px);
   box-shadow: none;
 }
 
-.info-btn.btn-buy {
+/* Contador de Ouro */
+.gold-counter-box {
+  background-color: #070400;
+  border: 3px solid var(--cor-borda);
+  outline: 3px solid #000;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.gold-label {
+  font-size: 5px;
+  color: var(--cor-texto-dim);
+  letter-spacing: 0.5px;
+}
+
+.gold-value {
+  font-size: 11px;
+  color: var(--cor-dourado);
+  font-weight: bold;
+  margin-top: 4px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Barra de XP HUD */
+.hud-header, .gold-counter-box, .xp-bar-container {
+  margin-bottom: 14px;
+}
+
+/* Abas */
+.hud-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 3px solid var(--cor-borda);
+  outline: 3px solid #000;
+  background-color: #0f0800;
+  margin-bottom: 12px;
+}
+
+.hud-tab-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 10px 4px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: var(--cor-texto-dim);
+}
+
+.hud-tab-btn.active {
+  background-color: rgba(139, 94, 26, 0.45);
+  color: var(--cor-dourado);
+}
+
+.hud-tab-btn:hover:not(.active) {
+  color: var(--cor-texto);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Lista de Upgrades (Conteúdo) */
+.hud-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+  margin-bottom: 12px;
+}
+
+/* Estilização da Scrollbar no painel */
+.hud-tab-content::-webkit-scrollbar {
+  width: 6px;
+}
+.hud-tab-content::-webkit-scrollbar-track {
+  background: #0f0800;
+  border: 1px solid var(--cor-borda);
+}
+.hud-tab-content::-webkit-scrollbar-thumb {
+  background: var(--cor-borda);
+  border-radius: 2px;
+}
+
+/* Linha de upgrade */
+.upgrade-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0a0500;
+  border: 3px solid var(--cor-borda);
+  outline: 3px solid #000;
+  padding: 10px 8px;
+  box-shadow: 2px 2px 0 #000;
+  gap: 8px;
+}
+
+.upgrade-row:hover {
+  background-color: #110900;
+  border-color: var(--cor-texto);
+}
+
+.upgrade-row.equipped {
+  border-color: var(--cor-primaria);
+}
+
+.upgrade-icon {
+  font-size: 16px;
+}
+
+.upgrade-details {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.upgrade-name {
+  font-size: 6px;
+  color: var(--cor-texto);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upgrade-effect {
+  font-size: 5px;
+  color: var(--cor-texto-dim);
+}
+
+.upgrade-cost {
+  font-size: 5px;
+  color: var(--cor-dourado);
+  font-weight: bold;
+}
+
+.upgrade-count {
+  font-size: 5px;
+  color: var(--cor-texto-dim);
+}
+
+/* Botão de ação de upgrade */
+.upgrade-action-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5.5px;
+  padding: 7px 8px;
+  border: 2px solid #000;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  transition: transform 0.05s ease;
+}
+
+.upgrade-action-btn:hover:not(:disabled) {
+  transform: translate(0.5px, 0.5px);
+  box-shadow: 0.5px 0.5px 0 #000;
+}
+
+.upgrade-action-btn.btn-buy {
   background-color: var(--cor-primaria);
   color: #000;
 }
 
-.info-btn.btn-equip {
+.upgrade-action-btn.btn-equip {
   background-color: #2563eb;
   color: #fff;
 }
 
-.info-btn.btn-unequip {
+.upgrade-action-btn.btn-unequip {
   background-color: var(--cor-erro);
   color: #fff;
 }
 
-.info-btn:disabled {
-  background-color: #333 !important;
-  color: #666 !important;
+.upgrade-action-btn:disabled {
+  background-color: #262626 !important;
+  color: #555 !important;
   cursor: not-allowed;
+  box-shadow: none;
   transform: none;
-  box-shadow: 2px 2px 0 #000;
+}
+
+.debug-controls {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 2px dashed var(--cor-borda);
+  text-align: center;
 }
 
 /* ============================================================
-   RESPONSIVIDADE E ROTAÇÃO
+   TOASTS NOTIFICAÇÕES (POSICIONAMENTO FIXO CONTRA SHIFTS)
    ============================================================ */
-
-/* Alerta de rotação caso abra em Portrait em mobile */
-@media (max-width: 768px) and (orientation: portrait) {
-  body::before {
-    content: "🔄 Por favor, gire seu dispositivo na horizontal para forjar!";
-    position: fixed;
-    inset: 0;
-    background-color: #1a0e00;
-    color: var(--cor-texto);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    line-height: 2;
-    z-index: 9999;
-  }
-  .sandbox-container {
-    display: none;
-  }
+.toast-fixed {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  padding: 14px 18px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0 #000;
+  max-width: 320px;
+  line-height: 1.8;
+  text-align: center;
+  color: #fff;
 }
 
-@media (max-width: 900px) {
-  .game-area {
-    grid-template-columns: 180px 1fr 180px;
-  }
-  
-  .sandbox-container {
-    padding: 16px;
-  }
+.toast-fixed.show {
+  display: block;
+  animation: floatUpToast 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+}
+
+.toast-fixed.toast-ok {
+  background-color: #0a2e14;
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+}
+
+.toast-fixed.toast-erro {
+  background-color: #2e0a0a;
+  border-color: var(--cor-erro);
+  color: var(--cor-erro);
+}
+
+@keyframes floatUpToast {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }

@@ -14,183 +14,129 @@
 </head>
 <body>
 
-  <!-- Decoração de pixels flutuantes -->
-  <div class="bg-pixels" aria-hidden="true">
-    <span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span>
-  </div>
-
-  <!-- Container Horizontal Principal (O Painel da Taberna) -->
+  <!-- Container Horizontal Principal (Fullscreen) -->
   <main class="sandbox-container">
 
-    <!-- Topo: Painel de Controle -->
-    <header class="sandbox-header">
-      <!-- Configurações (Esquerda) -->
-      <button class="header-btn" id="btn-settings" onclick="openModal('settings')">
-        ⚙️
-      </button>
-
-      <!-- Barra de XP (Meio) -->
-      <div class="xp-bar-container">
-        <div class="rank-name" id="rank-name">NÍVEL: MADEIRA</div>
-        <div class="xp-progress-bar">
-          <div class="xp-fill" id="xp-fill" style="width: 0%;"></div>
-        </div>
-        <div class="xp-text" id="xp-text">0 / 500 XP</div>
-      </div>
-
-      <!-- Voltar (Direita) -->
-      <a href="../missoes.html" class="header-btn btn-close-sandbox" title="Voltar ao mural">
-        ❌
-      </a>
-    </header>
-
-    <!-- Área de Jogo Central (Horizontal) -->
-    <div class="game-area">
-
-      <!-- Esquerda: Status & Melhorias Ativas -->
-      <section class="left-panel">
+    <!-- Seção Esquerda: Melhorias Ativas & Poster de Missões -->
+    <div class="left-section">
+      <!-- Painel de slots equipados -->
+      <div class="panel-box glass-panel">
         <div class="panel-section-title">[ ATIVOS ]</div>
-        
-        <!-- 4 Slots de Melhorias Equipadas -->
         <div class="active-upgrades-grid">
           <div class="active-upgrade-slot" id="slot-0" title="Vazio"></div>
           <div class="active-upgrade-slot" id="slot-1" title="Vazio"></div>
           <div class="active-upgrade-slot" id="slot-2" title="Vazio"></div>
           <div class="active-upgrade-slot" id="slot-3" title="Vazio"></div>
         </div>
-
         <div class="passive-gold-info">
-          <div class="passive-gold-label">PASSIVO / HORA</div>
-          <div class="passive-gold-value">
-            🪙 <span id="passive-gold-rate">0</span>
-          </div>
+          <div class="passive-gold-label">GPS (PASSIVO)</div>
+          <div class="passive-gold-value">🪙 <span id="passive-gold-rate">0</span>/h</div>
         </div>
+      </div>
 
-        <!-- Placar de Ouro Total -->
-        <div class="gold-counter-box">
-          <div class="gold-label">OURO TOTAL</div>
-          <div class="gold-value">
-            🪙 <span id="total-gold">0</span>
-          </div>
+      <!-- Poster Rústico de Missões (Link) -->
+      <a href="../missoes.html" class="missions-poster" title="Ir para o Mural de Missões">
+        <div class="poster-border">
+          <div class="poster-icon">📜</div>
+          <div class="poster-title">MURAL DE<br>MISSÕES</div>
+          <div class="poster-footer">▶ IR AGORA</div>
         </div>
-      </section>
-
-      <!-- Centro: Bigorna de cliques -->
-      <section class="center-panel">
-        <div class="anvil-click-zone">
-          <div class="click-instructions">CLIQUE NA BIGORNA P/ FORJAR!</div>
-          <div class="anvil-wrapper" id="anvil-wrapper" onclick="handleAnvilClick(event)">
-            <!-- Bigorna SVG -->
-            <svg id="anvil-svg" viewBox="0 0 32 32" width="160" height="160" shape-rendering="crispEdges">
-              <!-- Sombra -->
-              <rect x="2" y="28" width="28" height="3" fill="#000" opacity="0.3"/>
-              <!-- Base da bigorna -->
-              <rect x="6" y="24" width="20" height="4" fill="#333"/>
-              <rect x="5" y="25" width="22" height="2" fill="#333"/>
-              <rect x="8" y="22" width="16" height="2" fill="#444"/>
-              <rect x="6" y="24" width="20" height="1" fill="#555"/>
-              
-              <!-- Pescoço da bigorna -->
-              <rect x="11" y="16" width="10" height="6" fill="#333"/>
-              <rect x="12" y="16" width="8" height="6" fill="#444"/>
-              
-              <!-- Corpo da bigorna (Esquerda e Direita) -->
-              <rect x="4" y="10" width="24" height="6" fill="#555"/>
-              <rect x="6" y="8" width="20" height="2" fill="#666"/>
-              
-              <!-- Chifre esquerdo (Ponta redonda) -->
-              <rect x="0" y="10" width="4" height="3" fill="#444"/>
-              <rect x="1" y="9" width="3" height="1" fill="#555"/>
-              <rect x="2" y="8" width="2" height="1" fill="#666"/>
-              
-              <!-- Face superior (Brilho metálico) -->
-              <rect x="6" y="8" width="20" height="1" fill="#aaa"/>
-              <rect x="2" y="8" width="4" height="1" fill="#888"/>
-              
-              <!-- Sombra interna/profundidade -->
-              <rect x="10" y="12" width="14" height="4" fill="#3d3d3d"/>
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      <!-- Direita: A Forja que evolui -->
-      <section class="right-panel">
-        <div class="panel-section-title">[ FORJA ]</div>
-        <div class="forge-container" id="forge-container">
-          <!-- O SVG da Forja será injetado dinamicamente de acordo com o Nível -->
-        </div>
-      </section>
-
+      </a>
     </div>
 
-    <!-- Rodapé/Mesa da Oficina -->
-    <footer class="sandbox-footer">
-      <div class="shelf-buttons">
-        <button class="shelf-btn btn-market" onclick="openModal('market')">
-          🛒 MERCADO
-        </button>
-        <button class="shelf-btn btn-arsenal" onclick="openModal('arsenal')">
-          🛡️ ARSENAL
-        </button>
+    <!-- Seção Central: A Forja (Fundo) e a Bigorna (Frente) -->
+    <div class="center-section">
+      <!-- Forja SVG (Aparência evolutiva) -->
+      <div class="forge-container" id="forge-container">
+        <!-- Injetado via JS -->
       </div>
 
-      <!-- Debug Tool: Insta Level Up -->
-      <div class="debug-controls">
-        <button class="btn-debug" onclick="instaLevelUp()">
-          ✨ TEST: INSTA LVL UP
-        </button>
+      <!-- Bigorna de Clique (Foreground) -->
+      <div class="anvil-click-zone">
+        <div class="anvil-wrapper" id="anvil-wrapper" onclick="handleAnvilClick(event)">
+          <!-- Bigorna SVG -->
+          <svg id="anvil-svg" viewBox="0 0 32 32" width="180" height="180" shape-rendering="crispEdges">
+            <!-- Sombra -->
+            <rect x="2" y="28" width="28" height="3" fill="#000" opacity="0.4"/>
+            <!-- Base da bigorna -->
+            <rect x="6" y="24" width="20" height="4" fill="#2d2d2d"/>
+            <rect x="5" y="25" width="22" height="2" fill="#2d2d2d"/>
+            <rect x="8" y="22" width="16" height="2" fill="#3e3e3e"/>
+            <rect x="6" y="24" width="20" height="1" fill="#4d4d4d"/>
+            
+            <!-- Pescoço -->
+            <rect x="11" y="16" width="10" height="6" fill="#2d2d2d"/>
+            <rect x="12" y="16" width="8" height="6" fill="#3e3e3e"/>
+            
+            <!-- Corpo -->
+            <rect x="4" y="10" width="24" height="6" fill="#4d4d4d"/>
+            <rect x="6" y="8" width="20" height="2" fill="#5e5e5e"/>
+            
+            <!-- Chifre esquerdo -->
+            <rect x="0" y="10" width="4" height="3" fill="#3e3e3e"/>
+            <rect x="1" y="9" width="3" height="1" fill="#4d4d4d"/>
+            <rect x="2" y="8" width="2" height="1" fill="#5e5e5e"/>
+            
+            <!-- Face superior brilhante -->
+            <rect x="6" y="8" width="20" height="1" fill="#c7c7c7"/>
+            <rect x="2" y="8" width="4" height="1" fill="#9e9e9e"/>
+            
+            <!-- Sombreamento interno -->
+            <rect x="10" y="12" width="14" height="4" fill="#333333"/>
+          </svg>
+        </div>
+        <div class="click-instructions">CLIQUE NA BIGORNA P/ FORJAR!</div>
       </div>
-    </footer>
+    </div>
+
+    <!-- Seção Direita: O Painel de Status & Controle de Upgrades (HUD Integrado) -->
+    <div class="right-section glass-panel">
+      <!-- Cabeçalho do Painel -->
+      <div class="hud-header">
+        <button class="hud-btn btn-settings" onclick="openModal('settings')" title="Configurações">⚙️</button>
+        <div class="hud-title">PAINEL HUD</div>
+        <button class="hud-btn btn-reset" onclick="resetProgress()" title="Limpar Progresso">🔄</button>
+      </div>
+
+      <!-- Placar de Ouro -->
+      <div class="gold-counter-box">
+        <div class="gold-label">OURO DA GUILDA</div>
+        <div class="gold-value">🪙 <span id="total-gold">0</span></div>
+      </div>
+
+      <!-- Barra de Rank & XP -->
+      <div class="xp-bar-container">
+        <div class="rank-name" id="rank-name">NÍVEL: MADEIRA</div>
+        <div class="xp-progress-bar">
+          <div class="xp-fill" id="xp-fill"></div>
+        </div>
+        <div class="xp-text" id="xp-text">0 / 500 XP</div>
+      </div>
+
+      <!-- Abas Internas (Loja / Arsenal) -->
+      <div class="hud-tabs">
+        <button class="hud-tab-btn active" id="tab-btn-market" onclick="switchHudTab('market')">🛒 LOJA</button>
+        <button class="hud-tab-btn" id="tab-btn-arsenal" onclick="switchHudTab('arsenal')">🛡️ ARSENAL</button>
+      </div>
+
+      <!-- Conteúdo da Aba (Lista de Upgrades) -->
+      <div class="hud-tab-content" id="hud-tab-content">
+        <!-- Injetado dinamicamente via JS -->
+      </div>
+
+      <!-- Rodapé do HUD: Testes & Debug -->
+      <div class="debug-controls">
+        <button class="btn-debug" onclick="instaLevelUp()">✨ TEST: INSTA LVL UP</button>
+      </div>
+    </div>
 
   </main>
 
   <!-- ==========================================
-       MODAIS (POPUPS DE CONFIGURAÇÃO / SHOP / INV)
+       MODAIS (SOBREPOSIÇÕES SUSPENSAS)
        ========================================== -->
 
-  <!-- 1. Modal do Mercado (Market) -->
-  <div class="modal-overlay" id="market-modal">
-    <div class="modal-card">
-      <header class="modal-header">
-        <h2>[ MERCADO DE MELHORIAS ]</h2>
-        <button class="modal-close" onclick="closeModal('market')">❌</button>
-      </header>
-      <div class="modal-body-split">
-        <!-- Esquerda: Grid de Itens para comprar -->
-        <div class="modal-grid" id="market-items-grid">
-          <!-- Injetado via JS -->
-        </div>
-        <!-- Direita: Painel de Informações -->
-        <div class="modal-info-panel" id="market-info-panel">
-          <div class="info-empty">Selecione uma melhoria para comprar</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Modal do Arsenal (Inventory) -->
-  <div class="modal-overlay" id="arsenal-modal">
-    <div class="modal-card">
-      <header class="modal-header">
-        <h2>[ ARSENAL DO GUERREIRO ]</h2>
-        <button class="modal-close" onclick="closeModal('arsenal')">❌</button>
-      </header>
-      <div class="modal-body-split">
-        <!-- Esquerda: Grid de Itens comprados -->
-        <div class="modal-grid" id="arsenal-items-grid">
-          <!-- Injetado via JS -->
-        </div>
-        <!-- Direita: Painel de Informações -->
-        <div class="modal-info-panel" id="arsenal-info-panel">
-          <div class="info-empty">Selecione uma melhoria do arsenal</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. Modal de Configurações (Settings) -->
+  <!-- Modal de Configurações (Settings) -->
   <div class="modal-overlay" id="settings-modal">
     <div class="modal-card mini-modal">
       <header class="modal-header">
@@ -199,33 +145,33 @@
       </header>
       <div class="modal-body" style="text-align: center; padding: 20px;">
         <p style="font-size: 8px; color: var(--cor-texto-dim); line-height: 2; margin-bottom: 20px;">
-          (Menu em desenvolvimento. Nada por aqui ainda!)
+          (Menu de Configurações em desenvolvimento. Use o botão 🔄 no HUD para resetar o progresso do jogo.)
         </p>
         <button class="btn-primary" onclick="closeModal('settings')">FECHAR</button>
       </div>
     </div>
   </div>
 
-  <!-- 4. Modal de Rendimento Offline (Offline Income) -->
+  <!-- Modal de Rendimento Offline (Offline Income) -->
   <div class="modal-overlay" id="offline-modal">
     <div class="modal-card mini-modal">
       <header class="modal-header">
-        <h2>[ PRODUTIVIDADE OFFLINE ]</h2>
+        <h2>[ RENDIMENTOS ]</h2>
       </header>
-      <div class="modal-body" style="text-align: center; padding: 20px;">
-        <p style="font-size: 10px; color: var(--cor-dourado); margin-bottom: 16px;">🪙</p>
+      <div class="modal-body" style="text-align: center; padding: 24px 20px;">
+        <p style="font-size: 14px; margin-bottom: 12px;">🪙</p>
         <p style="font-size: 8px; color: var(--cor-texto); line-height: 2; margin-bottom: 24px;" id="offline-message">
           Sua forja gerou 0 de ouro enquanto você esteve fora da guilda!
         </p>
         <button class="btn-primary" onclick="closeModal('offline')">
-          ⚔ COLETAR OURO
+          ⚔ COLETAR RECOMPENSA
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Toast de Notificações -->
-  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+  <!-- Toast de Notificações (Posicionado Fixo para Não Deslocar Layout) -->
+  <div id="toast" class="toast-fixed" role="alert" aria-live="polite"></div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
