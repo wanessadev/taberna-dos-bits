@@ -1,27 +1,6 @@
-// --- CLIENTE SUPABASE ---
-// Usa o cliente criado em supabaseClient.js
-const supabaseClient = window.supabaseClient || window.supabase;
-
-// --- ALTERNÂNCIA DE ABAS ---
-function switchTab(aba) {
-  const painelLogin = document.getElementById('form-login');
-  const painelCadastro = document.getElementById('form-register');
-  const btnLogin = document.getElementById('tab-login');
-  const btnCadastro = document.getElementById('tab-register');
-
-  esconderToast();
-
-  if (aba === 'login') {
-    painelLogin.classList.add('active');
-    painelCadastro.classList.remove('active');
-    btnLogin.classList.add('active');
-    btnCadastro.classList.remove('active');
-  } else {
-    painelCadastro.classList.add('active');
-    painelLogin.classList.remove('active');
-    btnCadastro.classList.add('active');
-    btnLogin.classList.remove('active');
-  }
+// --- OBTENER CLIENTE SUPABASE ---
+function getSupabaseClient() {
+  return window.supabaseClient || window.supabase;
 }
 
 // --- TOAST (FEEDBACK) ---
@@ -43,23 +22,50 @@ function esconderToast() {
   toast.classList.remove('show');
 }
 
-// --- VALIDAR CONEXÃO COM SUPABASE ---
+// --- ALTERNÂNCIA DE ABAS ---
+function switchTab(aba) {
+  const painelLogin = document.getElementById('form-login');
+  const painelCadastro = document.getElementById('form-register');
+  const btnLogin = document.getElementById('tab-login');
+  const btnCadastro = document.getElementById('tab-register');
+
+  esconderToast();
+
+  if (!painelLogin || !painelCadastro || !btnLogin || !btnCadastro) return;
+
+  if (aba === 'login') {
+    painelLogin.classList.add('active');
+    painelCadastro.classList.remove('active');
+    btnLogin.classList.add('active');
+    btnCadastro.classList.remove('active');
+  } else {
+    painelCadastro.classList.add('active');
+    painelLogin.classList.remove('active');
+    btnCadastro.classList.add('active');
+    btnLogin.classList.remove('active');
+  }
+}
+
+// --- VALIDAR SUPABASE ---
 function validarSupabase() {
-  if (!supabaseClient || !supabaseClient.auth) {
+  const client = getSupabaseClient();
+
+  if (!client || !client.auth) {
     mostrarToast(
-      '✖ Erro: Conexão com Supabase falhou. Recarregue a página com Ctrl + F5.',
+      '✖ Erro: Conexão com Supabase falhou. Recarregue com Ctrl + F5.',
       'erro',
       6000
     );
-    return false;
+    return null;
   }
 
-  return true;
+  return client;
 }
 
 // --- LOGIN ---
 async function handleLogin() {
-  if (!validarSupabase()) return;
+  const client = validarSupabase();
+  if (!client) return;
 
   const email = document.getElementById('login-email').value.trim();
   const senha = document.getElementById('login-password').value;
@@ -77,7 +83,7 @@ async function handleLogin() {
   }
 
   try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
+    const { data, error } = await client.auth.signInWithPassword({
       email,
       password: senha
     });
@@ -95,7 +101,7 @@ async function handleLogin() {
     }
 
     if (!data.user) {
-      throw new Error('Não foi possível autenticar o usuário.');
+      throw new Error('Usuário não encontrado.');
     }
 
     mostrarToast('✔ ACESSO CONCEDIDO!', 'ok');
@@ -116,7 +122,8 @@ async function handleLogin() {
 
 // --- CADASTRO ---
 async function handleRegister() {
-  if (!validarSupabase()) return;
+  const client = validarSupabase();
+  if (!client) return;
 
   const nome = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
@@ -124,7 +131,7 @@ async function handleRegister() {
   const confirm = document.getElementById('reg-confirm').value;
 
   if (!nome || !email || !senha || !confirm) {
-    mostrarToast('⚠ Preencha todos os campos para criar o herói.', 'erro');
+    mostrarToast('⚠ Preencha todos os campos.', 'erro');
     return;
   }
 
@@ -146,7 +153,7 @@ async function handleRegister() {
   }
 
   try {
-    const { data, error } = await supabaseClient.auth.signUp({
+    const { data, error } = await client.auth.signUp({
       email,
       password: senha,
       options: {
@@ -186,7 +193,6 @@ async function handleRegister() {
       throw new Error('Não foi possível criar o usuário.');
     }
 
-    // Se o Supabase estiver com confirmação de e-mail ativada
     if (!data.session) {
       mostrarToast(
         '✔ Herói criado! Agora confirme seu e-mail e depois entre na taverna.',
@@ -218,16 +224,13 @@ async function handleRegister() {
   }
 }
 
+// --- DEIXAR FUNÇÕES DISPONÍVEIS PARA OS BOTÕES DO HTML ---
+window.switchTab = switchTab;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+
 // --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
   switchTab('login');
-
-  if (!supabaseClient || !supabaseClient.auth) {
-    mostrarToast(
-      '✖ Erro: Conexão com Supabase falhou. Verifique o supabaseClient.js ou recarregue com Ctrl + F5.',
-      'erro',
-      6000
-    );
-  }
+  validarSupabase();
 });
-
