@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placar Global — Taberna dos Bits</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="placar.css" />
+</head>
+<body>
+
+  <div class="bg-pixels" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="scroll-container placar-scroll">
+    
+    <!-- Voltar para o mural -->
+    <div class="btn-back-wrap">
+      <a href="missoes.html" class="btn-back">◀ MURAL DE MISSÕES</a>
+    </div>
+
+    <header class="tavern-header">
+      <div class="tavern-icon">🏆</div>
+      <h1 class="tavern-title">PLACAR<br/>GLOBAL</h1>
+      <div class="tavern-subtitle">— Ranking da Guilda —</div>
+    </header>
+
+    <!-- Navegação entre abas de Missões -->
+    <nav class="tab-nav" role="tablist">
+      <button
+        class="tab-btn active"
+        id="tab-missao1"
+        role="tab"
+        aria-selected="true"
+        aria-controls="leaderboard-table"
+        onclick="switchMission('missao1')"
+      >
+        MISSÃO I
+      </button>
+      <button
+        class="tab-btn"
+        id="tab-missao2"
+        role="tab"
+        aria-selected="false"
+        aria-controls="leaderboard-table"
+        onclick="switchMission('missao2')"
+      >
+        MISSÃO II
+      </button>
+    </nav>
+
+    <!-- Lista do Leaderboard -->
+    <div class="leaderboard-list" id="leaderboard-table" role="tabpanel">
+      <!-- Injetado dinamicamente via JS (Carregando...) -->
+      <div class="leaderboard-loading">⏳ CARREGANDO DADOS...</div>
+    </div>
+
+    <!-- Toast de Feedback -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <footer class="tavern-footer">
+      ⚙ Taberna dos Bits v1.0 · Powered by Supabase
+    </footer>
+
+  </main>
+
+  <!-- CDNs e Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabaseClient.js?v=2"></script>
+  <script src="placar.js?v=2"></script>
+</body>
+</html>

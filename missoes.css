@@ -1,0 +1,218 @@
+/* ============================================================
+   missoes.css — Mural de Missões da Guilda
+   ============================================================ */
+
+.missoes-scroll {
+  max-width: 680px;
+}
+
+/* ---------- BARRA DE INFORMAÇÕES DO HERÓI ---------- */
+.hero-info-bar {
+  background-color: #0c0700;
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 9px;
+  color: var(--cor-texto);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+#hero-nome {
+  color: var(--cor-dourado);
+  letter-spacing: 1px;
+}
+
+.hero-classe-badge {
+  background-color: #1a0e00;
+  border: 2px solid var(--cor-borda);
+  padding: 4px 8px;
+  font-size: 7px;
+  color: var(--cor-primaria);
+  letter-spacing: 1px;
+}
+
+/* ---------- GRID DE MISSÕES ---------- */
+.missoes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.missao-card {
+  font-family: 'Press Start 2P', monospace;
+  background-color: #0f0800;
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  padding: 24px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 6px 6px 0 0 #000;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s ease;
+}
+
+.missao-card:hover {
+  background-color: #160c00;
+  border-color: var(--cor-texto-dim);
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 0 #000;
+}
+
+.missao-card:hover .missao-icon-wrap svg {
+  animation: bounceIcon 0.5s steps(2, end) infinite alternate;
+}
+
+@keyframes bounceIcon {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-4px); }
+}
+
+.missao-numero {
+  font-size: 7px;
+  color: var(--cor-texto-dim);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.missao-icon-wrap {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.missao-icon-wrap svg {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.missao-titulo {
+  font-size: 11px;
+  color: var(--cor-dourado);
+  margin-bottom: 12px;
+  line-height: 1.4;
+  letter-spacing: 1.5px;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.missao-desc {
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.missao-detalhes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.detalhe-item {
+  font-size: 6px;
+  background-color: #1a0e00;
+  border: 2px solid var(--cor-borda);
+  padding: 4px 6px;
+  color: var(--cor-texto);
+}
+
+.missao-ranks {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.rank {
+  font-size: 5px;
+  padding: 2px 4px;
+  border: 1px solid #333;
+  background-color: #222;
+  color: #555;
+  border-radius: 2px;
+}
+
+/* Ranks de destaque */
+.rank.ferro    { color: #a19d94; border-color: #7a766f; }
+.rank.prata    { color: #d1d5db; border-color: #9ca3af; }
+.rank.ouro     { color: #fbbf24; border-color: #d97706; }
+.rank.diamante { color: #60a5fa; border-color: #2563eb; }
+
+.btn-missao {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  width: 100%;
+  padding: 12px 8px;
+  background-color: var(--cor-primaria);
+  color: #000;
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0 0 #000;
+  margin-top: auto;
+  text-align: center;
+}
+
+.missao-card:hover .btn-missao {
+  background-color: var(--cor-primaria-hover);
+}
+
+/* ---------- PLACAR GLOBAL LINK ---------- */
+.placar-link-wrap {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.btn-placar {
+  font-family: 'Press Start 2P', monospace;
+  display: inline-block;
+  font-size: 9px;
+  padding: 16px 20px;
+  background-color: var(--cor-dourado);
+  color: #000;
+  text-decoration: none;
+  border: 4px solid #000;
+  box-shadow: 6px 6px 0 0 #000;
+  transition: transform 0.1s ease;
+}
+
+.btn-placar:hover {
+  background-color: #cc8800;
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 0 #000;
+}
+
+.btn-placar:active {
+  transform: translate(6px, 6px);
+  box-shadow: none;
+}
+
+/* ---------- RESPONSIVIDADE ---------- */
+@media (max-width: 600px) {
+  .missoes-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .hero-info-bar {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .hero-classe-badge {
+    align-self: flex-end;
+  }
+
+  .btn-placar {
+    font-size: 7px;
+    padding: 12px 14px;
+    width: 100%;
+  }
+}
