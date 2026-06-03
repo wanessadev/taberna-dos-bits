@@ -67,7 +67,7 @@ async function finalizarHeroi() {
     if (error) throw error;
 
     mostrarToast(`✔ ${estado.classeSelecionada} forjado com sucesso!`, 'ok');
-    setTimeout(() => window.location.href = 'mural.html', 2000);
+    setTimeout(() => window.location.href = 'missoes.html', 2000);
 
   } catch (erro) {
     mostrarToast(`✖ ${erro.message}`, 'erro');

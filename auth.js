@@ -51,7 +51,7 @@ async function handleLogin() {
     if (error) throw error;
     
     mostrarToast('✔ ACESSO CONCEDIDO!', 'ok');
-    setTimeout(() => window.location.href = 'mural.html', 1500);
+    setTimeout(() => window.location.href = 'missoes.html', 1500);
 
   } catch (erro) {
     mostrarToast(`✖ Erro: ${erro.message}`, 'erro');
