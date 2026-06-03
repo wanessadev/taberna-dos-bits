@@ -1,4 +1,3 @@
-```js
 // --- CLIENTE SUPABASE ---
 // Usa o cliente criado em supabaseClient.js
 const supabaseClient = window.supabaseClient || window.supabase;
@@ -231,5 +230,4 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 });
-```
 

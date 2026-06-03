@@ -1,10 +1,6 @@
 // --- CONFIGURAÇÃO DO SUPABASE ---
 // (Carregado de forma compartilhada através do supabaseClient.js)
 
-```js
-// --- CONFIGURAÇÃO DO SUPABASE ---
-// Supabase é carregado de forma compartilhada através do supabaseClient.js
-
 const estado = { classeSelecionada: null };
 
 const ICONES_CLASSE = {
@@ -120,4 +116,3 @@ async function finalizarHeroi() {
     }
   }
 }
-```
