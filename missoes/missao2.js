@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { user: loggedInUser }, error } = await supabase.auth.getUser();
     if (error || !loggedInUser) {
       mostrarToast('⚠ Aventureiro não autenticado! Retornando...', 'erro', 2000);
-      setTimeout(() => window.location.href = 'index.html', 1500);
+      setTimeout(() => window.location.href = '../index.html', 1500);
       return;
     }
     user = loggedInUser;
