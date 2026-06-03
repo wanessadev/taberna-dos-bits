@@ -97,4 +97,9 @@ async function handleRegister() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => switchTab('login'));
+document.addEventListener('DOMContentLoaded', () => {
+  switchTab('login');
+  if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+    mostrarToast('✖ Erro: Conexão com Supabase falhou. Verifique sua conexão ou recarregue a página com Ctrl + F5.', 'erro', 6000);
+  }
+});

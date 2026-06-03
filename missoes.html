@@ -138,7 +138,13 @@
     </footer>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="missoes.js"></script>
+  <!-- 1º: A biblioteca do Supabase (o motor) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <!-- 2º: O cliente Supabase configurado -->
+  <script src="supabaseClient.js?v=2"></script>
+
+  <!-- 3º: Lógica das missões -->
+  <script src="missoes.js?v=2"></script>
 </body>
 </html>

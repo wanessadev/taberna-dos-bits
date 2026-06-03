@@ -1,8 +1,5 @@
 // --- CONFIGURAÇÃO DO SUPABASE ---
-// Substitua pelos seus valores reais
-const SUPABASE_URL      = 'https://SUA_URL_AQUI.supabase.co';
-const SUPABASE_ANON_KEY = 'SUA_CHAVE_AQUI';
-const supabase          = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// (Carregado de forma compartilhada através do supabaseClient.js)
 
 const estado = { classeSelecionada: null };
 
