@@ -1,4 +1,4 @@
-// --- TOAST FEEDBACK ---
+// --- SEÇÃO DE TOAST ---
 function mostrarToast(mensagem, tipo = 'info', duracao = 3500) {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -242,7 +242,18 @@ function salvarJogo() {
 }
 
 // --- CARREGAR JOGO E CALCULAR PRODUTIVIDADE OFFLINE ---
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Inicialização básica do Supabase (para evitar erros se não estiver logado)
+  let loggedInUser = null;
+  if (typeof supabase !== 'undefined' && supabase) {
+    try {
+      const { data: { user: u } } = await supabase.auth.getUser();
+      loggedInUser = u;
+    } catch(e) {
+      console.warn("Sem conexão Supabase autenticada na sandbox.");
+    }
+  }
+
   const salvo = localStorage.getItem('taberna_idle_state');
   if (salvo) {
     try {
@@ -336,6 +347,7 @@ function obterTotalOuroPassivo() {
   return rate;
 }
 
+// Click Power
 function obterTotalClick() {
   let power = 1; // Click base
   gameState.upgrades.forEach(u => {
