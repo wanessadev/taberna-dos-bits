@@ -24,7 +24,7 @@ function switchTab(aba) {
 function mostrarToast(mensagem, tipo = 'ok', duracao = 3500) {
   const toast = document.getElementById('toast');
   toast.textContent = mensagem;
-  toast.className = `toast show toast-${tipo}`;
+  toast.className = toast show toast-${tipo};
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(esconderToast, duracao);
 }
@@ -54,7 +54,7 @@ async function handleLogin() {
     setTimeout(() => window.location.href = 'mural.html', 1500);
 
   } catch (erro) {
-    mostrarToast(`✖️ Erro: ${erro.message}`, 'erro');
+    mostrarToast(✖️ Erro: ${erro.message}, 'erro');
   } finally {
     btn.textContent = '⚔️ ENTRAR NA TABERNA';
     btn.disabled = false;
@@ -90,7 +90,7 @@ async function handleRegister() {
     setTimeout(() => window.location.href = 'forja.html', 2000);
 
   } catch (erro) {
-    mostrarToast(`✖️ Erro: ${erro.message}`, 'erro');
+    mostrarToast(✖️ Erro: ${erro.message}, 'erro');
   } finally {
     btn.textContent = '✨ FORJAR PERSONAGEM';
     btn.disabled = false;
