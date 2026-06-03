@@ -4,9 +4,7 @@ function switchTab(aba) {
   const painelCadastro = document.getElementById('form-register');
   const btnLogin       = document.getElementById('tab-login');
   const btnCadastro    = document.getElementById('tab-register');
-
   esconderToast();
-
   if (aba === 'login') {
     painelLogin.classList.add('active');
     painelCadastro.classList.remove('active');
@@ -28,35 +26,29 @@ function mostrarToast(mensagem, tipo = 'ok', duracao = 3500) {
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(esconderToast, duracao);
 }
-
 function esconderToast() {
   document.getElementById('toast').classList.remove('show');
 }
 
 // --- LOGIN ---
 async function handleLogin() {
-  if (!window.supabase?.auth) {
+  if (!window.supabaseClient?.auth) {
     mostrarToast('✖ Erro: cliente Supabase não inicializado.', 'erro');
     return;
   }
   const email = document.getElementById('login-email').value.trim();
   const senha = document.getElementById('login-password').value;
-
   const btn = document.querySelector('#form-login .btn-primary');
   btn.textContent = '⏳ VALIDANDO...';
   btn.disabled = true;
-
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ 
-        email, 
-        password: senha 
+    const { data, error } = await window.supabaseClient.auth.signInWithPassword({ 
+      email, 
+      password: senha 
     });
-
     if (error) throw error;
-    
     mostrarToast('✔ ACESSO CONCEDIDO!', 'ok');
     setTimeout(() => window.location.href = 'mural.html', 1500);
-
   } catch (erro) {
     mostrarToast(`✖ Erro: ${erro.message}`, 'erro');
   } finally {
@@ -67,7 +59,7 @@ async function handleLogin() {
 
 // --- CADASTRO ---
 async function handleRegister() {
-  if (!window.supabase?.auth) {
+  if (!window.supabaseClient?.auth) {
     mostrarToast('✖ Erro: cliente Supabase não inicializado.', 'erro');
     return;
   }
@@ -75,28 +67,22 @@ async function handleRegister() {
   const email   = document.getElementById('reg-email').value.trim();
   const senha   = document.getElementById('reg-password').value;
   const confirm = document.getElementById('reg-confirm').value;
-
   if (senha !== confirm) {
     mostrarToast('⚠ Senhas não coincidem!', 'erro');
     return;
   }
-
   const btn = document.querySelector('#form-register .btn-primary');
   btn.textContent = '⏳ FORJANDO...';
   btn.disabled = true;
-
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await window.supabaseClient.auth.signUp({
       email,
       password: senha,
       options: { data: { nome_aventureiro: nome } }
     });
-
     if (error) throw error;
-
     mostrarToast('✔ HERÓI CRIADO!', 'ok');
     setTimeout(() => window.location.href = 'forja.html', 2000);
-
   } catch (erro) {
     mostrarToast(`✖ Erro: ${erro.message}`, 'erro');
   } finally {
@@ -106,7 +92,7 @@ async function handleRegister() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!window.supabase) {
+  if (!window.supabaseClient) {
     console.error('⚠ Supabase não encontrado. Verifique a ordem dos scripts no HTML.');
   }
   switchTab('login');
