@@ -2,7 +2,7 @@
 function mostrarToast(mensagem, tipo = 'info', duracao = 3500) {
   const toast = document.getElementById('toast');
   if (!toast) return;
-  toast.textContent = mensaje;
+ toast.textContent = mensagem;
   toast.className = `toast show toast-${tipo}`;
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(esconderToast, duracao);
