@@ -21,18 +21,21 @@ html, body {
   background-color: #000;
 }
 
-/* Cena de Fundo Centralizada de Aspect Ratio Fixo Ancorada no Chão */
+/* Cena de Fundo Widescreen 16:9 Ancorada no Chão */
 .scene-background {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 100vmax;
-  height: 100vmax;
+  width: 100vw;
+  height: 56.25vw; /* Proporção 16:9 */
+  max-height: 100vh;
+  max-width: 177.78vh; /* Proporção 16:9 */
   background: url('taverna_forja_bg.png') no-repeat center bottom;
-  background-size: 100% 100%;
+  background-size: cover;
   z-index: 1;
   pointer-events: none;
+  overflow: hidden; /* Impede transbordamento da imagem 1:1 original */
   image-rendering: auto; /* auto para ilustrações complexas */
 }
 
@@ -188,14 +191,14 @@ html, body {
   height: 100%;
 }
 
-/* A Forja gigante no background da cena (Alinhada com o fogo) */
+/* A Forja gigante no background da cena (Alinhada com o fogo do bg 16:9) */
 .forge-container {
   position: absolute;
-  left: 40.5%;
-  top: 53.6%;
-  transform: translate(-50%, -50%);
-  width: 32%;
-  height: 32%;
+  left: 42.6%;
+  top: 12.3%;
+  transform: translate(-50%, -10%); /* Ajuste de elevação vertical */
+  width: 30%;
+  height: 30%;
   z-index: 2;
   display: flex;
   align-items: center;
@@ -209,12 +212,12 @@ html, body {
   height: 100%;
 }
 
-/* A Bigorna de cliques no primeiro plano (Alinhada com a bigorna do bg) */
+/* A Bigorna de cliques no primeiro plano (Alinhada com a bigorna do bg 16:9) */
 .anvil-click-zone {
   position: absolute;
-  left: 40.5%;
-  top: 78.5%;
-  transform: translate(-50%, -50%);
+  left: 42.6%;
+  top: 60.9%;
+  transform: translate(-50%, -30%); /* Leve ajuste para sentar sobre a bigorna do fundo */
   z-index: 5;
   display: flex;
   flex-direction: column;
@@ -477,7 +480,7 @@ html, body {
 
 .upgrade-effect {
   font-size: 5px;
-  color: var(--cor-texto-dim);
+  color: #f5deb3; /* Cor clara idêntica à do texto principal */
 }
 
 .upgrade-cost {
@@ -488,7 +491,7 @@ html, body {
 
 .upgrade-count {
   font-size: 5px;
-  color: var(--cor-texto-dim);
+  color: #e2b474; /* Dourado quente e mais claro */
 }
 
 /* Botão de ação de upgrade */
@@ -710,4 +713,68 @@ html, body {
 .status-value {
   color: var(--cor-dourado);
   font-weight: bold;
+}
+
+/* Título de seção nos painéis esquerdos */
+.panel-section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: var(--cor-texto); /* Lighter wheat color for maximum legibility */
+  margin-bottom: 14px;
+  text-shadow: 1px 1px 0 #000;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Mensagem de Arsenal vazio */
+.info-empty {
+  font-size: 6px;
+  color: var(--cor-texto-dim); /* Warm golden wheat color, readable */
+  text-align: center;
+  padding: 30px 10px;
+  line-height: 2;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Efeito flutuante de pontos amarelos ao clicar na bigorna */
+.floating-points {
+  position: absolute;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--cor-dourado); /* Dourado/Amarelo */
+  text-shadow: 2px 2px 0 #000;
+  pointer-events: none;
+  z-index: 100;
+  animation: floatPointsUp 0.68s cubic-bezier(0.18, 0.89, 0.32, 1) both;
+}
+
+@keyframes floatPointsUp {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  20%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  100% { transform: translate(-50%, -110px) scale(0.9); opacity: 0; }
+}
+
+/* Partículas amarelas de faíscas ao clicar na bigorna */
+.click-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: var(--cor-dourado); /* Amarelo */
+  border: 1px solid #000;
+  pointer-events: none;
+  z-index: 90;
+  animation: clickParticleAnim 0.58s cubic-bezier(0.1, 0.8, 0.25, 1) both;
+}
+
+@keyframes clickParticleAnim {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.1) rotate(360deg);
+    opacity: 0;
+  }
 }

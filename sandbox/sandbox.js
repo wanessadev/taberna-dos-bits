@@ -300,18 +300,38 @@ function handleAnvilClick(event) {
   const anvilWrapper = document.getElementById('anvil-wrapper');
   const rect = anvilWrapper.getBoundingClientRect();
   
+  const leftPos = event ? event.clientX - rect.left : rect.width / 2;
+  const topPos = event ? event.clientY - rect.top : rect.height / 2;
+
   const floating = document.createElement('div');
   floating.className = 'floating-points';
   floating.textContent = `+${clickPower}`;
-  
-  const leftPos = event ? event.clientX - rect.left : rect.width / 2;
-  const topPos = event ? event.clientY - rect.top : rect.height / 2;
-  
   floating.style.left = `${leftPos}px`;
   floating.style.top = `${topPos}px`;
   
   anvilWrapper.appendChild(floating);
   setTimeout(() => floating.remove(), 700);
+
+  // Spawn de faíscas amarelas
+  const numParticles = 6;
+  for (let i = 0; i < numParticles; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'click-particle';
+    
+    // Vetor de direção aleatório (360 graus)
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 20 + Math.random() * 30;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance - 8; // Empurra faíscas levemente para cima
+    
+    particle.style.setProperty('--dx', `${dx}px`);
+    particle.style.setProperty('--dy', `${dy}px`);
+    particle.style.left = `${leftPos}px`;
+    particle.style.top = `${topPos}px`;
+    
+    anvilWrapper.appendChild(particle);
+    setTimeout(() => particle.remove(), 580);
+  }
 
   atualizarUI();
 }
