@@ -246,6 +246,10 @@ html, body {
   transform: scale(0.92) translateY(5px);
 }
 
+.anvil-wrapper.flash svg {
+  filter: drop-shadow(0 0 18px var(--cor-dourado)) brightness(1.38) !important;
+}
+
 .click-instructions {
   font-size: 6px;
   color: #fff;
@@ -258,10 +262,10 @@ html, body {
    SEÇÃO DIREITA (HUD INTEGRADO - SCROLL / PARCHMENT)
    ============================================================ */
 .right-section {
-  width: 320px;
+  width: 400px; /* Aumentado em 25% (de 320px para 400px) */
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 18px;
   height: 100%;
   z-index: 10;
   pointer-events: auto; /* Permite cliques */
@@ -272,26 +276,26 @@ html, body {
   justify-content: space-between;
   align-items: center;
   border-bottom: 4px solid var(--cor-borda);
-  padding-bottom: 10px;
-  margin-bottom: 14px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .hud-title {
-  font-size: 9px;
+  font-size: 11px; /* Escalonado em 25% */
   color: var(--cor-texto);
   font-weight: bold;
 }
 
 .hud-btn {
   font-family: inherit;
-  font-size: 10px;
+  font-size: 13px; /* Escalonado em 25% */
   background-color: #1a0e00;
   color: var(--cor-texto-dim);
   border: 2px solid var(--cor-borda);
   outline: 2px solid #000;
   cursor: pointer;
-  width: 28px;
-  height: 28px;
+  width: 35px; /* Aumentado */
+  height: 35px; /* Aumentado */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -314,51 +318,51 @@ html, body {
   background-color: #070400;
   border: 3px solid var(--cor-borda);
   outline: 3px solid #000;
-  padding: 10px;
+  padding: 12px;
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .gold-label {
-  font-size: 5px;
+  font-size: 6.5px; /* Aumentado */
   color: var(--cor-texto-dim);
   letter-spacing: 0.5px;
 }
 
 .gold-value {
-  font-size: 11px;
+  font-size: 14px; /* Aumentado */
   color: var(--cor-dourado);
   font-weight: bold;
   margin-top: 4px;
-  text-shadow: 1px 1px 0 #000;
+  text-shadow: 1.5px 1.5px 0 #000;
 }
 
 /* Barra de XP HUD */
 .hud-header, .gold-counter-box {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .xp-bar-container {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   background-color: #070400;
   border: 3px solid var(--cor-borda);
   outline: 3px solid #000;
-  padding: 10px;
+  padding: 12px;
   box-shadow: 2px 2px 0 #000;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .rank-name {
-  font-size: 7px;
+  font-size: 9px; /* Aumentado */
   font-weight: bold;
   text-align: center;
-  text-shadow: 1px 1px 0 #000;
+  text-shadow: 1.5px 1.5px 0 #000;
 }
 
 .xp-progress-bar {
-  height: 12px;
+  height: 15px; /* Aumentado */
   background-color: #1a0e00;
   border: 2px solid #000;
   position: relative;
@@ -369,15 +373,15 @@ html, body {
   height: 100%;
   width: 0%;
   background-color: var(--cor-primaria);
-  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.4);
   transition: width 0.2s ease-out;
 }
 
 .xp-text {
-  font-size: 5.5px;
+  font-size: 7px; /* Aumentado */
   color: var(--cor-texto-dim);
   text-align: center;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 /* Abas */
@@ -392,8 +396,8 @@ html, body {
 
 .hud-tab-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  padding: 10px 4px;
+  font-size: 9px; /* Aumentado */
+  padding: 12px 6px; /* Aumentado */
   border: none;
   cursor: pointer;
   background: none;
@@ -442,7 +446,7 @@ html, body {
   background-color: #0a0500;
   border: 3px solid var(--cor-borda);
   outline: 3px solid #000;
-  padding: 10px 8px;
+  padding: 12px 10px; /* Aumentado */
   box-shadow: 2px 2px 0 #000;
   gap: 8px;
 }
@@ -457,7 +461,7 @@ html, body {
 }
 
 .upgrade-icon {
-  font-size: 16px;
+  font-size: 20px; /* Aumentado */
 }
 
 .upgrade-details {
@@ -470,7 +474,7 @@ html, body {
 }
 
 .upgrade-name {
-  font-size: 6px;
+  font-size: 7.5px; /* Aumentado */
   color: var(--cor-texto);
   font-weight: bold;
   white-space: nowrap;
@@ -479,26 +483,26 @@ html, body {
 }
 
 .upgrade-effect {
-  font-size: 5px;
+  font-size: 6.5px; /* Aumentado */
   color: #f5deb3; /* Cor clara idêntica à do texto principal */
 }
 
 .upgrade-cost {
-  font-size: 5px;
+  font-size: 6.5px; /* Aumentado */
   color: var(--cor-dourado);
   font-weight: bold;
 }
 
 .upgrade-count {
-  font-size: 5px;
+  font-size: 6.5px; /* Aumentado */
   color: #e2b474; /* Dourado quente e mais claro */
 }
 
 /* Botão de ação de upgrade */
 .upgrade-action-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 5.5px;
-  padding: 7px 8px;
+  font-size: 7px; /* Aumentado */
+  padding: 9px 10px; /* Aumentado */
   border: 2px solid #000;
   box-shadow: 1px 1px 0 #000;
   cursor: pointer;
@@ -571,7 +575,8 @@ html, body {
   display: none;
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2000;
   padding: 14px 18px;
   font-family: 'Press Start 2P', monospace;
@@ -602,8 +607,8 @@ html, body {
 }
 
 @keyframes floatUpToast {
-  from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
 }
 
 /* ============================================================

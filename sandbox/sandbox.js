@@ -296,13 +296,17 @@ function handleAnvilClick(event) {
   gameState.gold += clickPower;
   gameState.xp += clickPower;
 
-  // Floating text indicator
   const anvilWrapper = document.getElementById('anvil-wrapper');
   const rect = anvilWrapper.getBoundingClientRect();
   
   const leftPos = event ? event.clientX - rect.left : rect.width / 2;
   const topPos = event ? event.clientY - rect.top : rect.height / 2;
 
+  // Efeito de flash/brilho dourado na própria bigorna
+  anvilWrapper.classList.add('flash');
+  setTimeout(() => anvilWrapper.classList.remove('flash'), 120);
+
+  // Floating text indicator (+ouro)
   const floating = document.createElement('div');
   floating.className = 'floating-points';
   floating.textContent = `+${clickPower}`;
@@ -312,17 +316,27 @@ function handleAnvilClick(event) {
   anvilWrapper.appendChild(floating);
   setTimeout(() => floating.remove(), 700);
 
-  // Spawn de faíscas amarelas
-  const numParticles = 6;
+  // Spawn de faíscas incandescentes realistas (12 partículas)
+  const numParticles = 12;
+  const sparkColors = ['#ffd700', '#ffaa00', '#ff5500', '#ffffff'];
+  
   for (let i = 0; i < numParticles; i++) {
     const particle = document.createElement('div');
     particle.className = 'click-particle';
     
-    // Vetor de direção aleatório (360 graus)
+    // Tamanhos variados para profundidade (4px a 8px)
+    const size = 4 + Math.floor(Math.random() * 5);
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Cores incandescentes aleatórias
+    particle.style.backgroundColor = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+    
+    // Vetor de direção e força de impulsão (360 graus)
     const angle = Math.random() * Math.PI * 2;
-    const distance = 20 + Math.random() * 30;
+    const distance = 25 + Math.random() * 45;
     const dx = Math.cos(angle) * distance;
-    const dy = Math.sin(angle) * distance - 8; // Empurra faíscas levemente para cima
+    const dy = Math.sin(angle) * distance - 12; // Direciona levemente para cima (efeito de impacto)
     
     particle.style.setProperty('--dx', `${dx}px`);
     particle.style.setProperty('--dy', `${dy}px`);
