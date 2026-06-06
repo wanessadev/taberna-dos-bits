@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Missão III: Pescador de Bits — Taberna dos Bits</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="jogos.css" />
+</head>
+<body>
+
+  <div class="bg-pixels" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="scroll-container game-scroll">
+    
+    <!-- Voltar para o mural -->
+    <div class="btn-back-wrap">
+      <a href="../missoes.html" class="btn-back">◀ MURAL DE MISSÕES</a>
+    </div>
+
+    <header class="tavern-header">
+      <div class="tavern-icon">🎣</div>
+      <h1 class="tavern-title">PESCADOR<br/>DE BITS</h1>
+      <div class="tavern-subtitle">— Missão III —</div>
+    </header>
+
+    <!-- Barra de Status -->
+    <div class="game-status-bar">
+      <div>
+        <span class="status-label">PONTOS:</span>
+        <span id="game-score" class="status-value">0</span>
+      </div>
+      <div>
+        <span class="status-label">TEMPO:</span>
+        <span id="game-timer" class="status-value">90s</span>
+      </div>
+    </div>
+
+    <!-- Área do Jogo -->
+    <div class="game-board m3-board" id="game-board">
+      
+      <!-- Painel Lateral da HUD -->
+      <div class="m3-side-hud">
+        <div class="hud-title">DIFICULDADE</div>
+        <div class="difficulty-group">
+          <label class="difficulty-option selected" id="opt-facil" onclick="selectDifficulty('facil')">
+            <input type="radio" name="difficulty" value="facil" checked /> FÁCIL
+          </label>
+          <label class="difficulty-option" id="opt-medio" onclick="selectDifficulty('medio')">
+            <input type="radio" name="difficulty" value="medio" /> MÉDIO
+          </label>
+          <label class="difficulty-option" id="opt-dificil" onclick="selectDifficulty('dificil')">
+            <input type="radio" name="difficulty" value="dificil" /> DIFÍCIL
+          </label>
+          <label class="difficulty-option" id="opt-lendario" onclick="selectDifficulty('lendario')">
+            <input type="radio" name="difficulty" value="lendario" /> LENDÁRIO
+          </label>
+        </div>
+        
+        <div class="multiplier-box">
+          <span class="multiplier-label">MULTIPLICADOR</span>
+          <span id="multiplier-value" class="multiplier-val">x1.0</span>
+        </div>
+      </div>
+
+      <!-- Play Area -->
+      <div class="m3-play-area">
+        
+        <!-- FASE 1: Lagoa de Arremesso -->
+        <div class="pond-view" id="pond-view">
+          <div class="pond-water"></div>
+          
+          <!-- Pescador pixel art SVG -->
+          <div class="pond-character" id="pond-character">
+            <svg viewBox="0 0 24 32" width="100%" height="100%" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+              <!-- Chapéu de palha -->
+              <rect x="5" y="2" width="14" height="2" fill="#d97706"/>
+              <rect x="7" y="0" width="10" height="2" fill="#d97706"/>
+              <!-- Pernas/Pés -->
+              <rect x="8" y="28" width="3" height="4" fill="#000"/>
+              <rect x="13" y="28" width="3" height="4" fill="#000"/>
+              <!-- Calça azul -->
+              <rect x="7" y="24" width="10" height="4" fill="#1e3a8a"/>
+              <!-- Corpo / Colete marrom -->
+              <rect x="6" y="12" width="12" height="12" fill="#78350f"/>
+              <!-- Camisa por dentro -->
+              <rect x="9" y="14" width="6" height="8" fill="#f5deb3"/>
+              <!-- Cabeça / Rosto trigo -->
+              <rect x="9" y="4" width="6" height="8" fill="#ffedd5"/>
+              <rect x="8" y="4" width="8" height="2" fill="#111827"/>
+              <rect x="7" y="6" width="2" height="4" fill="#111827"/>
+              <rect x="15" y="6" width="2" height="4" fill="#111827"/>
+              <!-- Olhos -->
+              <rect x="10" y="7" width="1" height="1" fill="#000"/>
+              <rect x="13" y="7" width="1" height="1" fill="#000"/>
+              <!-- Braço / Mão -->
+              <rect x="16" y="15" width="4" height="2" fill="#ffedd5"/>
+              <!-- Vara de pescar cinza -->
+              <rect x="18" y="13" width="1" height="3" fill="#4b5563"/>
+              <rect x="19" y="10" width="1" height="3" fill="#4b5563"/>
+              <rect x="20" y="7" width="1" height="3" fill="#4b5563"/>
+              <rect x="21" y="4" width="1" height="3" fill="#4b5563"/>
+              <rect x="22" y="1" width="1" height="3" fill="#4b5563"/>
+            </svg>
+          </div>
+          
+          <!-- Bobber na água -->
+          <div class="pond-bobber" id="pond-bobber">
+            <div class="bobber-splash" id="bobber-splash"></div>
+          </div>
+          
+          <!-- Linha de pesca ligando a vara ao bobber -->
+          <svg id="svg-line" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;">
+            <line id="bobber-line-svg" x1="0" y1="0" x2="0" y2="0" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" style="display: none;"/>
+          </svg>
+          
+          <!-- Alerta de mordida (!) -->
+          <div class="bite-alert" id="bite-alert">!</div>
+          
+          <!-- Barra de arremesso -->
+          <div class="cast-bar-container" id="cast-bar-container">
+            <div class="cast-bar-label" id="cast-bar-label">SEGURE CLICK / ESPAÇO PARA LANÇAR</div>
+            <div class="cast-bar-fill" id="cast-bar-fill"></div>
+          </div>
+          
+        </div>
+
+        <!-- FASE 3: Luta na Água (Vertical Column) -->
+        <div class="reel-view" id="reel-view">
+          <div class="m3-instruction-text">MANTENHA O PEIXE DENTRO DO RETÂNGULO VERDE!<br/>(Segure Click/Espaço para subir, solte para descer)</div>
+          
+          <!-- Canal de água -->
+          <div class="fishing-channel" id="fishing-channel">
+            <div class="channel-bubbles" id="channel-bubbles"></div>
+            <!-- Bobber verde do jogador -->
+            <div class="fishing-bar" id="fishing-bar"></div>
+            <!-- Peixe -->
+            <div class="fishing-fish" id="fishing-fish">
+              <svg viewBox="0 0 24 24" width="100%" height="100%" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+                <!-- Peixe Azul -->
+                <rect x="4" y="6" width="15" height="12" fill="#3b82f6"/>
+                <rect x="6" y="8" width="12" height="8" fill="#60a5fa"/>
+                <rect x="18" y="9" width="4" height="6" fill="#1d4ed8"/>
+                <rect x="5" y="9" width="2" height="2" fill="#fff"/>
+                <rect x="6" y="10" width="1" height="1" fill="#000"/>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Barra de captura -->
+          <div class="catch-bar-container">
+            <div class="catch-bar-fill" id="catch-bar-fill-indicator"></div>
+          </div>
+        </div>
+
+        <!-- Overlay de início/fim cobrindo o board -->
+        <div class="board-overlay" id="board-overlay">
+          <h2 class="overlay-title" id="overlay-title">[ PREPARE-SE, HERÓI! ]</h2>
+          <p class="overlay-desc" id="overlay-desc">
+            Escolha a dificuldade ao lado, segure o clique para carregar o arremesso, espere a fisgada e capture os peixes!
+          </p>
+          <button class="btn-primary" id="btn-start" onclick="iniciarJogo()">
+            ⚔ INICIAR MISSÃO
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Toast de Feedback -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <footer class="tavern-footer">
+      ⚙ Taberna dos Bits v1.2 · Powered by Supabase
+    </footer>
+
+  </main>
+
+  <!-- CDNs e Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../supabaseClient.js?v=2"></script>
+  <script src="missao3.js?v=2"></script>
+</body>
+</html>

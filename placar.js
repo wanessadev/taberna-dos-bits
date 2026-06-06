@@ -32,21 +32,17 @@ function switchMission(missionId) {
   if (currentMission === missionId) return;
   currentMission = missionId;
 
-  // Atualizar visual das abas
-  const tabM1 = document.getElementById('tab-missao1');
-  const tabM2 = document.getElementById('tab-missao2');
-
-  if (missionId === 'missao1') {
-    tabM1.classList.add('active');
-    tabM1.setAttribute('aria-selected', 'true');
-    tabM2.classList.remove('active');
-    tabM2.setAttribute('aria-selected', 'false');
-  } else {
-    tabM2.classList.add('active');
-    tabM2.setAttribute('aria-selected', 'true');
-    tabM1.classList.remove('active');
-    tabM1.setAttribute('aria-selected', 'false');
-  }
+  // Atualizar visual das abas dinamicamente
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach(tab => {
+    if (tab.id === `tab-${missionId}`) {
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+    } else {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    }
+  });
 
   carregarRanking();
 }

@@ -224,3 +224,342 @@
   transform: translate(4px, 4px);
   box-shadow: none;
 }
+
+/* ============================================================
+   MISSÃO III: PESCADOR DE BITS
+   ============================================================ */
+
+.m3-board {
+  height: 400px;
+  display: flex;
+  background-color: #0c0700;
+  padding: 0;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+/* Painel Lateral da HUD */
+.m3-side-hud {
+  width: 150px;
+  border-right: 4px solid var(--cor-borda);
+  background-color: #160d00;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+  gap: 12px;
+  user-select: none;
+}
+
+.hud-title {
+  font-size: 7px;
+  color: var(--cor-texto-dim);
+  text-align: center;
+  border-bottom: 2px dashed var(--cor-borda);
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+}
+
+.difficulty-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.difficulty-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 6px;
+  color: var(--cor-texto);
+  padding: 6px;
+  border: 2px solid transparent;
+  background-color: #0c0700;
+  transition: all 0.1s ease;
+}
+
+.difficulty-option:hover {
+  border-color: var(--cor-texto-dim);
+}
+
+.difficulty-option input {
+  display: none;
+}
+
+.difficulty-option.selected {
+  border-color: var(--cor-dourado);
+  background-color: #2e1a00;
+  color: var(--cor-dourado);
+  box-shadow: inset 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+.difficulty-option.selected::before {
+  content: '▶';
+  font-size: 6px;
+  color: var(--cor-dourado);
+}
+
+.multiplier-box {
+  background-color: #000;
+  border: 2px solid var(--cor-borda);
+  padding: 8px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.multiplier-label {
+  font-size: 5px;
+  color: var(--cor-texto-dim);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.multiplier-val {
+  font-size: 9px;
+  color: var(--cor-dourado);
+  font-weight: bold;
+}
+
+/* Área de Jogo M3 */
+.m3-play-area {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background-color: #001f3f; /* Tom azul de água padrão */
+}
+
+/* FASE 1: Lagoa de Arremesso */
+.pond-view {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(to bottom, #001f3f, #004080);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+/* Água com ondas pixeladas */
+.pond-water {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,0.03) 15px, rgba(255,255,255,0.03) 16px),
+    repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px);
+}
+
+.pond-character {
+  position: absolute;
+  left: 20px;
+  bottom: 40px;
+  width: 48px;
+  height: 64px;
+  image-rendering: crispEdges;
+  z-index: 2;
+}
+
+.pond-bobber {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #e74c3c;
+  border: 1px solid #000;
+  border-radius: 50%;
+  z-index: 2;
+  bottom: 40px;
+  left: 20px;
+  display: none;
+}
+
+.bobber-splash {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-4px, -4px);
+  animation: splashRing 0.8s ease-out infinite;
+}
+
+@keyframes splashRing {
+  0% { transform: scale(0.2); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.bobber-line {
+  position: absolute;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform-origin: 0 0;
+  z-index: 1;
+  display: none;
+}
+
+/* Barra de Força de Arremesso */
+.cast-bar-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 20px;
+  background-color: #000;
+  border: 3px solid var(--cor-borda);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  z-index: 3;
+  box-shadow: 0 4px 0 #000;
+}
+
+.cast-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #22c55e 0%, #eab308 60%, #ef4444 100%);
+  transition: width 0.03s linear;
+}
+
+.cast-bar-label {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6px;
+  color: var(--cor-texto);
+  text-shadow: 2px 2px 0 #000;
+  white-space: nowrap;
+}
+
+/* Balão de Alerta do Peixe (!) */
+.bite-alert {
+  position: absolute;
+  width: 20px;
+  height: 24px;
+  background-color: #e74c3c;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #000;
+  z-index: 4;
+  animation: bounceBite 0.4s infinite alternate;
+  display: none;
+}
+
+@keyframes bounceBite {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+
+/* Feedback do Arremesso (Texto) */
+.cast-feedback {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: var(--cor-dourado);
+  text-shadow: 2px 2px 0 #000;
+  font-weight: bold;
+  animation: zoomText 1s ease-out forwards;
+  z-index: 5;
+}
+
+@keyframes zoomText {
+  0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+  20% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+  80% { transform: translateX(-50%) scale(1); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1) translateY(-20px); opacity: 0; }
+}
+
+/* FASE 3: Minijogo de Pesca Vertical */
+.reel-view {
+  width: 100%;
+  height: 100%;
+  display: none; /* Ativado via JS */
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #001224, #002c54, #004880);
+  position: relative;
+  gap: 20px;
+}
+
+/* Canal da Água */
+.fishing-channel {
+  width: 60px;
+  height: 320px;
+  background-color: rgba(0, 31, 63, 0.6);
+  border: 4px solid var(--cor-borda);
+  outline: 4px solid #000;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Bolhas no canal de água */
+.channel-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Barra verde do pescador (bobber) */
+.fishing-bar {
+  position: absolute;
+  left: 4px;
+  width: 44px;
+  background: rgba(46, 204, 113, 0.35);
+  border: 2px solid #2ecc71;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.6), inset 0 0 5px rgba(46, 204, 113, 0.4);
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* Peixe se movendo */
+.fishing-fish {
+  position: absolute;
+  left: 14px;
+  width: 24px;
+  height: 24px;
+  z-index: 3;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
+}
+
+/* Barra de progresso da captura (direita) */
+.catch-bar-container {
+  width: 18px;
+  height: 320px;
+  background-color: #000;
+  border: 3px solid var(--cor-borda);
+  position: relative;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.catch-bar-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to top, #e74c3c 0%, #f1c40f 50%, #2ecc71 100%);
+  transition: height 0.05s linear;
+}
+
+.m3-instruction-text {
+  position: absolute;
+  top: 15px;
+  font-size: 6px;
+  color: var(--cor-texto-dim);
+  text-align: center;
+  width: 90%;
+  line-height: 1.5;
+  text-shadow: 2px 2px 0 #000;
+}
