@@ -47,20 +47,20 @@
       </div>
     </div>
 
-    <!-- Área de Jogo (Taboleiro) -->
-    <div style="position: relative; margin-bottom: 20px;">
-      <div class="mines-grid" id="mines-grid">
+    <!-- Área de Jogo (Tabuleiro) -->
+    <div class="game-board" id="game-board" style="display: flex; align-items: center; justify-content: center; height: 320px;">
+      <div class="mines-grid" id="mines-grid" style="margin-bottom: 0;">
         <!-- Células geradas dinamicamente via JS -->
       </div>
 
       <!-- Overlay cobrindo o grid em caso de vitória/derrota/início -->
       <div class="board-overlay" id="board-overlay" style="display: flex;">
-        <h2 class="overlay-title" id="overlay-title">[ MISSÃO PERIGOSA! ]</h2>
+        <h2 class="overlay-title" id="overlay-title">[ PREPARE-SE, HERÓI! ]</h2>
         <p class="overlay-desc" id="overlay-desc">
           Revele as células seguras na grade 5x5. Cuidado com as 5 minas ocultas!
         </p>
         <button class="btn-primary" id="btn-start" onclick="iniciarJogo()">
-          ⚔ ENTRAR NO CAMPO
+          ⚔ INICIAR MISSÃO
         </button>
       </div>
     </div>
