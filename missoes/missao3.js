@@ -32,15 +32,15 @@ const DIFFICULTY_CONFIG = {
     title: 'Médio'
   },
   dificil: {
-    barHeight: 55,
-    difficulty: 70,
+    barHeight: 48,
+    difficulty: 75,
     behavior: 'sinker',
     multiplier: 2.5,
     reactionWindow: 700,
     title: 'Difícil'
   },
   lendario: {
-    barHeight: 38,
+    barHeight: 44,
     difficulty: 90,
     behavior: 'dart',
     multiplier: 4.0,
@@ -396,8 +396,9 @@ function updatePhysics() {
       const fishAccel = (fishTargetY - fishY) / denominator;
       fishVelocity += (fishAccel - fishVelocity) / 5;
     } else if (behavior !== 'smooth' && Math.random() < 0.0005 * diff) {
-      const minJump = Math.random() < 0.5 ? -100 : 50;
-      const maxJump = Math.random() < 0.5 ? -51 : 101;
+      const scale = 320 / 568;
+      const minJump = Math.random() < 0.5 ? Math.round(-100 * scale) : Math.round(50 * scale);
+      const maxJump = Math.random() < 0.5 ? Math.round(-51 * scale) : Math.round(101 * scale);
       fishTargetY = fishY + (minJump + Math.floor(Math.random() * (maxJump - minJump)));
     } else {
       fishTargetY = -1;
@@ -405,16 +406,18 @@ function updatePhysics() {
 
     // 3. Comportamento de corrido extra (dart)
     if (behavior === 'dart' && Math.random() < 0.001 * diff) {
-      const minJump = Math.random() < 0.5 ? (-100 - diff * 2) : 50;
-      const maxJump = Math.random() < 0.5 ? -51 : (101 + diff * 2);
+      const scale = 320 / 568;
+      const minJump = Math.random() < 0.5 ? Math.round((-100 - diff * 2) * scale) : Math.round(50 * scale);
+      const maxJump = Math.random() < 0.5 ? Math.round(-51 * scale) : Math.round((101 + diff * 2) * scale);
       fishTargetY = fishY + (minJump + Math.floor(Math.random() * (maxJump - minJump)));
     }
 
     // 4. Efeito de subida/descida passiva (floater/sinker)
+    const scale = 320 / 568;
     if (behavior === 'floater') {
-      fishBaseVel = Math.max(fishBaseVel - 0.01, -1.5); // flutua para cima (negativo)
+      fishBaseVel = Math.max(fishBaseVel - 0.01 * scale, -1.5 * scale); // flutua para cima (negativo)
     } else if (behavior === 'sinker') {
-      fishBaseVel = Math.min(fishBaseVel + 0.01, 1.5);  // afunda para baixo (positivo)
+      fishBaseVel = Math.min(fishBaseVel + 0.01 * scale, 1.5 * scale);  // afunda para baixo (positivo)
     } else {
       fishBaseVel = 0;
     }
