@@ -88,6 +88,15 @@ let lastTargetChange = 0;
 let catchProgress = 0; // Barra lateral de captura (0 a 100)
 let animationFrameId = null;
 
+// Acumulador de tempo físico para Timestep Fixo (60 FPS)
+let lastFrameTime = 0;
+let accumulator = 0;
+const TIMESTEP = 1000 / 60; // ~16.67ms por tick
+
+// Tempo de caridade (grace period) inicial
+let reelStartTime = 0;
+const GRACE_PERIOD_DURATION = 1500; // 1.5 segundos
+
 // Bolhas decorativas
 let bubbles = [];
 
@@ -225,7 +234,9 @@ function iniciarJogo() {
   // Garantir HUD desabilitado para cliques de dificuldade
   disableDifficultySelection(true);
 
-  // Iniciar loop de renderização do jogo
+  // Iniciar loop de renderização do jogo com timestep fixo
+  lastFrameTime = performance.now();
+  accumulator = 0;
   if (animationFrameId) cancelAnimationFrame(animationFrameId);
   animationFrameId = requestAnimationFrame(gameLoop);
 
@@ -257,16 +268,36 @@ function disableDifficultySelection(disable) {
   });
 }
 
-// --- LOOP GERAL DO JOGO (RENDER / FÍSICA) ---
-function gameLoop() {
+// --- LOOP GERAL DO JOGO (TIMESTEP ACUMULADO) ---
+function gameLoop(currentTime) {
   if (!isPlaying) return;
 
+  let dt = currentTime - lastFrameTime;
+  if (dt > 100) dt = 100; // Cap para evitar congelamento ("espiral da morte")
+  lastFrameTime = currentTime;
+
+  accumulator += dt;
+
+  // Roda a simulação física em passos de ~16.6ms fixos (60 FPS)
+  while (accumulator >= TIMESTEP) {
+    updatePhysics();
+    accumulator -= TIMESTEP;
+  }
+
+  // Renderiza a cena atualizada
+  renderGameUI();
+
+  animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+// --- ATUALIZAÇÃO DA FÍSICA DO JOGO (60 FPS FIXO) ---
+function updatePhysics() {
   const now = Date.now();
 
   if (gameState === 'CASTING_HOLD') {
     // Oscilar a barra de arremesso se o jogador estiver segurando
     if (isPressing) {
-      castPower += 2.5 * castDirection;
+      castPower += 1.8 * castDirection; // Velocidade de oscilação calibrada para 60 FPS (~0.93s ida e volta)
       if (castPower >= 100) {
         castPower = 100;
         castDirection = -1;
@@ -274,13 +305,12 @@ function gameLoop() {
         castPower = 0;
         castDirection = 1;
       }
-      document.getElementById('cast-bar-fill').style.width = `${castPower}%`;
     }
   } 
   
   else if (gameState === 'CASTING_FLIGHT') {
     // Interpolação parabólica do arremesso do bobber
-    castProgress += 0.035;
+    castProgress += 0.028; // ~0.6s de vôo
     if (castProgress >= 1) {
       castProgress = 1;
       gameState = 'WAITING_BITE';
@@ -294,26 +324,22 @@ function gameLoop() {
     const endY = targetBobberPos.y;
     
     const x = startX + (endX - startX) * castProgress;
-    // Parábola (curva de arremesso)
     const arcHeight = 65;
     const y = startY + (endY - startY) * castProgress - Math.sin(castProgress * Math.PI) * arcHeight;
     
     bobberPos = { x, y };
-    updateBobberUI();
   } 
   
   else if (gameState === 'WAITING_BITE') {
     // Flutuação sutil do bobber na água
-    const wave = Math.sin(now / 180) * 2;
+    const wave = Math.sin(now / 180) * 1.5;
     bobberPos.y = targetBobberPos.y + wave;
-    updateBobberUI();
   } 
   
   else if (gameState === 'BITE_ACTIVE') {
     // Piscadas rápidas do bobber indicando a mordida
-    const wave = Math.sin(now / 60) * 3;
+    const wave = Math.sin(now / 60) * 2.5;
     bobberPos.y = targetBobberPos.y + wave;
-    updateBobberUI();
 
     // Se passou do tempo da janela de reação
     const config = DIFFICULTY_CONFIG[selectedDifficulty];
@@ -331,13 +357,13 @@ function gameLoop() {
     // Aceleração com amortecimento se o peixe estiver na barra verde
     let bacc = isPressing ? ACC : -ACC;
     if (isInside) {
-      bacc *= 0.6; // Suaviza aceleração no peixe para evitar oscilações excessivas
+      bacc *= 0.5; // Damping de entrada: reduz aceleração em 50% para facilitar estabilização
     }
 
     barVelocity += bacc;
     
     // Limitar velocidade terminal para estabilidade
-    barVelocity = Math.max(-6.5, Math.min(6.5, barVelocity));
+    barVelocity = Math.max(-5.5, Math.min(5.5, barVelocity));
 
     barY += barVelocity;
     
@@ -351,11 +377,6 @@ function gameLoop() {
       barVelocity = isPressing ? 0 : BOUNCE_FACTOR * barVelocity;
       if (Math.abs(barVelocity) < 0.2) barVelocity = 0;
     }
-    
-    // Atualizar UI do Green Bar
-    const barEl = document.getElementById('fishing-bar');
-    barEl.style.bottom = `${barY}px`;
-    barEl.style.height = `${barHeight}px`;
 
     // Movimento do Peixe (IA)
     // 1. Mudança aleatória de destino baseado na dificuldade
@@ -394,26 +415,15 @@ function gameLoop() {
     fishY += fishVelocity;
     fishY = Math.max(0, Math.min(320 - 24, fishY));
 
-    // Atualizar UI do Peixe
-    const fishEl = document.getElementById('fishing-fish');
-    fishEl.style.bottom = `${fishY}px`;
-
-    // Atualizar progresso da captura (ganho / perda)
+    // Atualizar progresso da captura (ganho / perda com grace period)
+    const inGracePeriod = (now - reelStartTime) < GRACE_PERIOD_DURATION;
     if (isInside) {
-      catchProgress += 0.22; // Subida mais controlada
-      barEl.style.borderColor = '#2ecc71';
-      barEl.style.boxShadow = '0 0 12px rgba(46, 204, 113, 0.8)';
-    } else {
-      catchProgress -= 0.32; // Perda mais rápida que subida (Stardew Valley)
-      barEl.style.borderColor = '#e74c3c';
-      barEl.style.boxShadow = '0 0 12px rgba(231, 76, 60, 0.8)';
+      catchProgress += 0.20; // Progresso controlado
+    } else if (!inGracePeriod) {
+      catchProgress -= 0.30; // Decai apenas se fora do grace period
     }
     
     catchProgress = Math.max(0, Math.min(100, catchProgress));
-    
-    // Atualizar UI da barra de captura
-    const indicator = document.getElementById('catch-bar-fill-indicator');
-    indicator.style.height = `${catchProgress}%`;
 
     // Condições de fim da Luta (Vitória ou Fuga)
     if (catchProgress >= 100) {
@@ -423,10 +433,59 @@ function gameLoop() {
     }
     
     // Atualiza bolhas decorativas
-    updateBubbles();
+    updateBubblesPhysics();
   }
+}
 
-  animationFrameId = requestAnimationFrame(gameLoop);
+// --- RENDERIZAÇÃO DA UI GERAL (FRAME-RATE INDEPENDENTE) ---
+function renderGameUI() {
+  if (gameState === 'CASTING_HOLD') {
+    if (isPressing) {
+      document.getElementById('cast-bar-fill').style.width = `${castPower}%`;
+    }
+  } 
+  
+  else if (gameState === 'CASTING_FLIGHT' || gameState === 'WAITING_BITE' || gameState === 'BITE_ACTIVE') {
+    updateBobberUI();
+    
+    if (gameState === 'BITE_ACTIVE') {
+      const alertEl = document.getElementById('bite-alert');
+      alertEl.style.left = `${bobberPos.x - 6}px`;
+      alertEl.style.top = `${bobberPos.y - 28}px`;
+      alertEl.style.display = 'flex';
+    }
+  } 
+  
+  else if (gameState === 'REELING') {
+    // Atualizar UI do Green Bar
+    const barEl = document.getElementById('fishing-bar');
+    barEl.style.bottom = `${barY}px`;
+    barEl.style.height = `${barHeight}px`;
+
+    // Atualizar UI do Peixe
+    const fishEl = document.getElementById('fishing-fish');
+    fishEl.style.bottom = `${fishY}px`;
+
+    // Atualizar UI da barra de captura
+    const indicator = document.getElementById('catch-bar-fill-indicator');
+    indicator.style.height = `${catchProgress}%`;
+
+    // Glow verde ou vermelho
+    const isInside = (fishY + 20 >= barY) && (fishY + 4 <= barY + barHeight);
+    if (isInside) {
+      barEl.style.borderColor = '#2ecc71';
+      barEl.style.boxShadow = '0 0 12px rgba(46, 204, 113, 0.8)';
+    } else {
+      barEl.style.borderColor = '#e74c3c';
+      barEl.style.boxShadow = '0 0 12px rgba(231, 76, 60, 0.8)';
+    }
+
+    // Renderizar bolhas
+    bubbles.forEach(b => {
+      b.el.style.bottom = `${b.y}px`;
+      b.el.style.left = `${b.x}px`;
+    });
+  }
 }
 
 // --- RENDERIZAÇÃO DO BOBBER ---
@@ -704,9 +763,7 @@ function initBubbles() {
   }
 }
 
-function updateBubbles() {
-  if (gameState !== 'REELING') return;
-  
+function updateBubblesPhysics() {
   bubbles.forEach(b => {
     b.y -= b.speed;
     b.x += Math.sin(b.y / 20) * 0.3; // Oscilação sutil
@@ -717,8 +774,5 @@ function updateBubbles() {
       b.x = Math.floor(Math.random() * 54) + 3;
       b.speed = Math.random() * 0.8 + 0.4;
     }
-    
-    b.el.style.bottom = `${b.y}px`;
-    b.el.style.left = `${b.x}px`;
   });
 }
