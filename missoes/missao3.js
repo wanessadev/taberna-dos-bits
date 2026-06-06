@@ -93,9 +93,6 @@ let lastFrameTime = 0;
 let accumulator = 0;
 const TIMESTEP = 1000 / 60; // ~16.67ms por tick
 
-// Tempo de caridade (grace period) inicial
-let reelStartTime = 0;
-const GRACE_PERIOD_DURATION = 1500; // 1.5 segundos
 
 // Bolhas decorativas
 let bubbles = [];
@@ -415,12 +412,11 @@ function updatePhysics() {
     fishY += fishVelocity;
     fishY = Math.max(0, Math.min(320 - 24, fishY));
 
-    // Atualizar progresso da captura (ganho / perda com grace period)
-    const inGracePeriod = (now - reelStartTime) < GRACE_PERIOD_DURATION;
+    // Atualizar progresso da captura (ganho / perda)
     if (isInside) {
       catchProgress += 0.25; // Progresso controlado
-    } else if (!inGracePeriod) {
-      catchProgress -= 0.30; // Decai apenas se fora do grace period
+    } else {
+      catchProgress -= 0.30; // Decai imediatamente
     }
     
     catchProgress = Math.max(0, Math.min(100, catchProgress));
