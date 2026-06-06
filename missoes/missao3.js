@@ -221,7 +221,7 @@ function iniciarJogo() {
   document.getElementById('game-score').textContent = '0';
   
   const timerVal = document.getElementById('game-timer');
-  timerVal.textContent = '90s';
+  timerVal.textContent = `${timeLeft}s`;
   timerVal.classList.remove('timer-low');
 
   // Esconder overlay de início
@@ -418,7 +418,7 @@ function updatePhysics() {
     // Atualizar progresso da captura (ganho / perda com grace period)
     const inGracePeriod = (now - reelStartTime) < GRACE_PERIOD_DURATION;
     if (isInside) {
-      catchProgress += 0.20; // Progresso controlado
+      catchProgress += 0.25; // Progresso controlado
     } else if (!inGracePeriod) {
       catchProgress -= 0.30; // Decai apenas se fora do grace period
     }
