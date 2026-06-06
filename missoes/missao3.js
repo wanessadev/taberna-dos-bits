@@ -710,36 +710,45 @@ async function finalizarJogo() {
   oTitle.textContent = '[ MISSÃO CONCLUÍDA! ]';
   
   const multInfo = DIFFICULTY_CONFIG[selectedDifficulty].title;
-  oDesc.innerHTML = `Você encheu o balde! Pontuação total de <span class="status-value">${score} pontos</span> na dificuldade <strong>${multInfo}</strong>.<br/><br/>⏳ Enviando registro para a guilda...`;
-  
-  btnStart.textContent = '⚔ SALVANDO...';
-  btnStart.disabled = true;
-  overlay.style.display = 'flex';
+  const scoreMsg = `Você encheu o balde! Pontuação total de <span class="status-value">${score} pontos</span> na dificuldade <strong>${multInfo}</strong>.`;
 
   // Re-habilitar seleção de dificuldade
   disableDifficultySelection(false);
 
-  try {
-    // Gravar pontuação no Supabase
-    const { error: dbError } = await supabase
-      .from('placar')
-      .insert({
-        user_id: user.id,
-        missao: 'missao3',
-        pontuacao: score
-      });
+  if (score > 0) {
+    oDesc.innerHTML = scoreMsg + `<br/><br/>⏳ Enviando registro para a guilda...`;
+    btnStart.textContent = '⚔ SALVANDO...';
+    btnStart.disabled = true;
+    overlay.style.display = 'flex';
 
-    if (dbError) throw dbError;
+    try {
+      // Gravar pontuação no Supabase
+      const { error: dbError } = await supabase
+        .from('placar')
+        .insert({
+          user_id: user.id,
+          missao: 'missao3',
+          pontuacao: score
+        });
 
-    oDesc.innerHTML = `Pontuação de <span class="status-value">${score} pontos</span> (${multInfo}) registrada com sucesso no Placar da Guilda!`;
-    mostrarToast('✔ Pontuação salva no Placar!', 'ok');
-  } catch (err) {
-    console.error(err);
-    oDesc.innerHTML = `Missão cumprida com <span class="status-value">${score} pontos</span>!<br/><br/>✖ Erro ao registrar no database da guilda.`;
-    mostrarToast('✖ Falha ao salvar no banco de dados.', 'erro');
-  } finally {
+      if (dbError) throw dbError;
+
+      oDesc.innerHTML = `Pontuação de <span class="status-value">${score} pontos</span> (${multInfo}) registrada com sucesso no Placar da Guilda!`;
+      mostrarToast('✔ Pontuação salva no Placar!', 'ok');
+    } catch (err) {
+      console.error(err);
+      oDesc.innerHTML = `Missão cumprida com <span class="status-value">${score} pontos</span>!<br/><br/>✖ Erro ao registrar no database da guilda.`;
+      mostrarToast('✖ Falha ao salvar no banco de dados.', 'erro');
+    } finally {
+      btnStart.textContent = '⚔ JOGAR NOVAMENTE';
+      btnStart.disabled = false;
+    }
+  } else {
+    oDesc.innerHTML = scoreMsg + `<br/><br/>Pontuações zeradas não são registradas no Placar da Guilda!`;
+    overlay.style.display = 'flex';
     btnStart.textContent = '⚔ JOGAR NOVAMENTE';
     btnStart.disabled = false;
+    mostrarToast('ℹ Pontuação zerada não registrada.', 'info');
   }
 }
 
