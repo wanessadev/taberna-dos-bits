@@ -21,6 +21,9 @@
 
   <main class="scroll-container game-scroll">
     
+    <!-- Botão de Placar Rápido -->
+    <button class="btn-mini-leaderboard" onclick="abrirPlacarPopup()" title="Ver Placar desta Missão">👑</button>
+    
     <!-- Voltar para o mural -->
     <div class="btn-back-wrap">
       <a href="../missoes.html" class="btn-back">◀ MURAL DE MISSÕES</a>
@@ -67,6 +70,24 @@
       <button class="btn-restart" id="btn-restart" onclick="reiniciarJogo()" style="display: none;">
         🔄 REINICIAR
       </button>
+    </div>
+
+    <!-- Modal de Placar Rápido -->
+    <div class="modal-overlay" id="leaderboard-popup" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">[ PLACAR DA MISSÃO ]</h3>
+          <button class="modal-close" onclick="fecharPlacarPopup()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="mini-leaderboard-list" id="mini-leaderboard-list">
+            <div class="leaderboard-loading" style="font-size:7px; text-align:center; padding:10px 0;">⏳ CARREGANDO PLACAR...</div>
+          </div>
+          <div class="mini-leaderboard-actions" style="margin-top: 16px; text-align: center;">
+            <a href="../placar.html" class="btn-primary" style="display: inline-block; text-decoration: none; font-size: 8px; padding: 10px 14px;">🏆 PLACAR COMPLETO</a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Toast de Feedback -->

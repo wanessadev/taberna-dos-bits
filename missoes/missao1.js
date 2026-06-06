@@ -198,3 +198,76 @@ async function finalizarJogo() {
     btnStart.disabled = false;
   }
 }
+
+// --- POPUP PLACAR RÁPIDO ---
+async function abrirPlacarPopup() {
+  const popup = document.getElementById('leaderboard-popup');
+  const list = document.getElementById('mini-leaderboard-list');
+  if (!popup || !list) return;
+
+  popup.style.display = 'flex';
+  list.innerHTML = '<div class="leaderboard-loading" style="font-size:7px; text-align:center; padding:10px 0;">⏳ CARREGANDO...</div>';
+
+  try {
+    const { data: rankings, error } = await supabase
+      .from('placar')
+      .select(`
+        pontuacao,
+        perfis (
+          nome,
+          classe
+        )
+      `)
+      .eq('missao', 'missao1')
+      .order('pontuacao', { ascending: false })
+      .limit(5);
+
+    if (error) throw error;
+
+    if (!rankings || rankings.length === 0) {
+      list.innerHTML = '<div class="leaderboard-empty" style="font-size:7px; text-align:center; padding:10px 0;">[ NENHUM PLACAR REGISTRADO ]</div>';
+      return;
+    }
+
+    const icones = {
+      Guerreiro: '⚔️',
+      Mago:      '🧙',
+      Arqueiro:  '🏹'
+    };
+
+    list.innerHTML = '';
+    rankings.forEach((row, index) => {
+      const perfil = row.perfis || {};
+      const nome = perfil.nome || 'Aventureiro Oculto';
+      const classe = perfil.classe || 'Guerreiro';
+      const icone = icones[classe] || '⚔️';
+      const rank = index + 1;
+
+      const rowEl = document.createElement('div');
+      rowEl.style.display = 'flex';
+      rowEl.style.justifyContent = 'space-between';
+      rowEl.style.alignItems = 'center';
+      rowEl.style.padding = '6px 8px';
+      rowEl.style.borderBottom = '2px dashed #3d2200';
+      rowEl.style.fontSize = '7px';
+      rowEl.style.color = '#f5deb3';
+
+      rowEl.innerHTML = `
+        <span style="color:#ffd700; width: 25px;">#${rank}</span>
+        <span style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          ${icone} ${nome}
+        </span>
+        <span style="color:#ffd700;">${row.pontuacao} pts</span>
+      `;
+      list.appendChild(rowEl);
+    });
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = '<div class="leaderboard-empty" style="font-size:7px; text-align:center; color:#e74c3c; padding:10px 0;">✖ Erro ao obter placar.</div>';
+  }
+}
+
+function fecharPlacarPopup() {
+  const popup = document.getElementById('leaderboard-popup');
+  if (popup) popup.style.display = 'none';
+}
