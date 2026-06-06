@@ -14,32 +14,35 @@ function esconderToast() {
 }
 
 // --- DIFICULDADES E MULTIPLICADORES ---
-// --- DIFICULDADES E MULTIPLICADORES ---
 const DIFFICULTY_CONFIG = {
   facil: {
     barHeight: 95,
-    difficultyValue: 25,
+    difficulty: 20,
+    behavior: 'smooth',
     multiplier: 1.0,
     reactionWindow: 1200,
     title: 'Fácil'
   },
   medio: {
     barHeight: 75,
-    difficultyValue: 50,
+    difficulty: 45,
+    behavior: 'floater',
     multiplier: 1.5,
     reactionWindow: 950,
     title: 'Médio'
   },
   dificil: {
     barHeight: 55,
-    difficultyValue: 75,
+    difficulty: 70,
+    behavior: 'sinker',
     multiplier: 2.5,
     reactionWindow: 700,
     title: 'Difícil'
   },
   lendario: {
     barHeight: 38,
-    difficultyValue: 95,
+    difficulty: 90,
+    behavior: 'dart',
     multiplier: 4.0,
     reactionWindow: 500,
     title: 'Lendário'
@@ -73,16 +76,17 @@ let castProgress = 0; // 0 a 1 para interpolação do vôo
 let biteTimeout = null;
 let biteStartTime = 0;
 
-// Variáveis da Física de Pesca Vertical
+// Variáveis da Física de Pesca Vertical (Coordenadas Top-Down: 0 = topo, 320 = fundo)
 let barHeight = DIFFICULTY_CONFIG.facil.barHeight;
-let barY = 0; // Posição inferior da barra verde (0 a 320 - barHeight)
+let barY = 320 - barHeight; // Posição do topo da barra verde (inicia no fundo)
 let barVelocity = 0;
-const ACC = 0.14; // Aceleração base (tanto para gravidade quanto lift)
+const ACC = 0.14; // Aceleração base (bacc)
 const BOUNCE_FACTOR = -0.66; // Ricochete do chão/teto (Stardew Valley)
 
-let fishY = 150; // Posição inferior do peixe (0 a 320 - 24)
+let fishY = 280; // Posição do topo do peixe (inicia no fundo)
 let fishVelocity = 0;
-let fishTargetY = 150;
+let fishBaseVel = 0;
+let fishTargetY = 280;
 let lastTargetChange = 0;
 
 let catchProgress = 0; // Barra lateral de captura (0 a 100)
@@ -346,15 +350,17 @@ function updatePhysics() {
   } 
   
   else if (gameState === 'REELING') {
-    // Física do Green Bar (Bobber)
+    // Física do Green Bar (Bobber) em coordenadas Top-Down (0 = topo, 320 = fundo)
     const config = DIFFICULTY_CONFIG[selectedDifficulty];
-    const difficultyValue = config.difficultyValue;
+    const diff = config.difficulty;
+    const behavior = config.behavior;
     const isInside = (fishY + 20 >= barY) && (fishY + 4 <= barY + barHeight);
 
-    // Aceleração com amortecimento se o peixe estiver na barra verde
-    let bacc = isPressing ? ACC : -ACC;
+    // bacc = mouseDown ? -0.25 : 0.25 (escalado para 320px -> 0.14)
+    // No top-down, pressionar puxa para cima (negativo)
+    let bacc = isPressing ? -ACC : ACC;
     if (isInside) {
-      bacc *= 0.5; // Damping de entrada: reduz aceleração em 50% para facilitar estabilização
+      bacc *= 0.6; // Amortecimento de 40% no peixe (wasInBar check em fishing.js)
     }
 
     barVelocity += bacc;
@@ -364,59 +370,64 @@ function updatePhysics() {
 
     barY += barVelocity;
     
-    // Colisão das bordas (Canal vertical de 320px)
-    if (barY <= 0) {
+    // Colisão das bordas
+    if (barY < 0) {
       barY = 0;
       barVelocity = isPressing ? 0 : BOUNCE_FACTOR * barVelocity;
-      if (Math.abs(barVelocity) < 0.2) barVelocity = 0;
-    } else if (barY >= 320 - barHeight) {
+    } else if (barY + barHeight > 320) {
       barY = 320 - barHeight;
       barVelocity = isPressing ? 0 : BOUNCE_FACTOR * barVelocity;
-      if (Math.abs(barVelocity) < 0.2) barVelocity = 0;
     }
 
-    // Movimento do Peixe (IA)
-    // 1. Mudança aleatória de destino baseado na dificuldade
-    if (Math.random() < difficultyValue * 0.00025) {
-      const percent = Math.min(0.99, (difficultyValue + (10 + Math.random() * 35)) * 0.01);
-      const maxFishY = 320 - 24;
-      const minJump = -fishY;
-      const maxJump = (maxFishY - fishY) * percent;
-      fishTargetY = fishY + (minJump + Math.random() * (maxJump - minJump));
-      fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
-    }
-
-    // 2. Comportamento errático para dificuldades altas (peixe corre)
-    if ((selectedDifficulty === 'dificil' || selectedDifficulty === 'lendario') && Math.random() < 0.001 * difficultyValue) {
-      const maxFishY = 320 - 24;
-      const jumpRange = 60 + difficultyValue * 1.2;
-      const jump = Math.random() < 0.5 ? -(30 + Math.random() * jumpRange) : (30 + Math.random() * jumpRange);
+    // Movimento do Peixe (IA 1-to-1 com fishing.js)
+    // 1. Mudança aleatória de destino baseado na dificuldade e tipo de comportamento
+    const targetThreshold = (behavior === 'smooth' ? 0.005 : 0.00025) * diff;
+    if (Math.random() < targetThreshold && (fishTargetY === -1 || behavior !== 'smooth')) {
+      const percent = Math.min(99, diff + (10 + Math.floor(Math.random() * 35))) * 0.01;
+      const minChange = -fishY;
+      const maxChange = (320 - 24 - fishY) * percent;
+      const jump = minChange + Math.floor(Math.random() * (maxChange - minChange));
       fishTargetY = fishY + jump;
-      fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
     }
 
-    // 3. Interpolação física do peixe ao destino
+    // 2. Aceleração em direção ao alvo
     if (fishTargetY !== -1 && Math.abs(fishY - fishTargetY) > 3) {
-      const denominator = (10 + Math.random() * 20) + Math.max(0, 100 - difficultyValue);
+      const denominator = (10 + Math.floor(Math.random() * 20)) + Math.max(0, 100 - diff);
       const fishAccel = (fishTargetY - fishY) / denominator;
       fishVelocity += (fishAccel - fishVelocity) / 5;
+    } else if (behavior !== 'smooth' && Math.random() < 0.0005 * diff) {
+      const minJump = Math.random() < 0.5 ? -100 : 50;
+      const maxJump = Math.random() < 0.5 ? -51 : 101;
+      fishTargetY = fishY + (minJump + Math.floor(Math.random() * (maxJump - minJump)));
     } else {
-      // Pequeno drift/movimento aleatório lento
-      if (Math.random() < 0.0005 * difficultyValue) {
-        const maxFishY = 320 - 24;
-        fishTargetY = fishY + (Math.random() < 0.5 ? -(40 + Math.random() * 40) : (40 + Math.random() * 40));
-        fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
-      }
+      fishTargetY = -1;
     }
 
-    fishY += fishVelocity;
-    fishY = Math.max(0, Math.min(320 - 24, fishY));
+    // 3. Comportamento de corrido extra (dart)
+    if (behavior === 'dart' && Math.random() < 0.001 * diff) {
+      const minJump = Math.random() < 0.5 ? (-100 - diff * 2) : 50;
+      const maxJump = Math.random() < 0.5 ? -51 : (101 + diff * 2);
+      fishTargetY = fishY + (minJump + Math.floor(Math.random() * (maxJump - minJump)));
+    }
+
+    // 4. Efeito de subida/descida passiva (floater/sinker)
+    if (behavior === 'floater') {
+      fishBaseVel = Math.max(fishBaseVel - 0.01, -1.5); // flutua para cima (negativo)
+    } else if (behavior === 'sinker') {
+      fishBaseVel = Math.min(fishBaseVel + 0.01, 1.5);  // afunda para baixo (positivo)
+    } else {
+      fishBaseVel = 0;
+    }
+
+    // 5. Atualizar posição e limitar limites do peixe (altura 24px)
+    fishTargetY = Math.max(-1, Math.min(fishTargetY, 320 - 20));
+    fishY = Math.max(0, Math.min(fishY + fishVelocity + fishBaseVel, 320 - 24));
 
     // Atualizar progresso da captura (ganho / perda)
     if (isInside) {
-      catchProgress += 0.25; // Progresso controlado
+      catchProgress += 0.20; // +2 progress (fishing.js) no escopo de 1000 -> +0.20 no escopo 100
     } else {
-      catchProgress -= 0.30; // Decai imediatamente
+      catchProgress -= 0.30; // -3 progress (fishing.js) no escopo de 1000 -> -0.30 no escopo 100
     }
     
     catchProgress = Math.max(0, Math.min(100, catchProgress));
@@ -453,14 +464,16 @@ function renderGameUI() {
   } 
   
   else if (gameState === 'REELING') {
-    // Atualizar UI do Green Bar
+    // Atualizar UI do Green Bar (Top-Down)
     const barEl = document.getElementById('fishing-bar');
-    barEl.style.bottom = `${barY}px`;
+    barEl.style.top = `${barY}px`;
+    barEl.style.bottom = 'auto';
     barEl.style.height = `${barHeight}px`;
 
-    // Atualizar UI do Peixe
+    // Atualizar UI do Peixe (Top-Down)
     const fishEl = document.getElementById('fishing-fish');
-    fishEl.style.bottom = `${fishY}px`;
+    fishEl.style.top = `${fishY}px`;
+    fishEl.style.bottom = 'auto';
 
     // Atualizar UI da barra de captura
     const indicator = document.getElementById('catch-bar-fill-indicator');
@@ -606,12 +619,13 @@ function hookFish() {
   // Configurar jogo de luta
   const config = DIFFICULTY_CONFIG[selectedDifficulty];
   barHeight = config.barHeight;
-  barY = 0;
+  barY = 320 - barHeight; // Inicia no fundo
   barVelocity = 0;
   
-  fishY = 140;
+  fishY = 280; // Inicia no fundo
   fishVelocity = 0;
-  fishTargetY = 140;
+  fishBaseVel = 0;
+  fishTargetY = 280;
   lastTargetChange = Date.now();
   
   catchProgress = 30; // Começa com 30% de lambuja
