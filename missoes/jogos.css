@@ -661,3 +661,35 @@
   max-height: 200px;
   overflow-y: auto;
 }
+
+/* ---------- TOAST ABSOLUTE FLOATING (MISSÃO 3) ---------- */
+.m3-play-area .toast {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+  z-index: 100;
+  pointer-events: none;
+  width: auto;
+  max-width: 90%;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 #000;
+}
+
+.m3-play-area .toast.show {
+  display: block;
+  animation: toastAppear 0.2s ease-out forwards;
+}
+
+@keyframes toastAppear {
+  0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+/* Suporte para toast-info caso não definido */
+.toast.toast-info {
+  background-color: #2e1a00;
+  color: var(--cor-texto);
+  border-color: var(--cor-borda);
+}
