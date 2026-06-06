@@ -671,9 +671,9 @@
   margin-top: 0;
   z-index: 100;
   pointer-events: none;
-  width: auto;
+  width: max-content;
   max-width: 90%;
-  white-space: nowrap;
+  white-space: normal;
   box-shadow: 3px 3px 0 #000;
 }
 
