@@ -14,39 +14,32 @@ function esconderToast() {
 }
 
 // --- DIFICULDADES E MULTIPLICADORES ---
+// --- DIFICULDADES E MULTIPLICADORES ---
 const DIFFICULTY_CONFIG = {
   facil: {
     barHeight: 95,
-    fishAccel: 0.04,
-    fishFriction: 0.92,
-    targetChangeInterval: 1600,
+    difficultyValue: 25,
     multiplier: 1.0,
     reactionWindow: 1200,
     title: 'Fácil'
   },
   medio: {
     barHeight: 75,
-    fishAccel: 0.09,
-    fishFriction: 0.89,
-    targetChangeInterval: 1100,
+    difficultyValue: 50,
     multiplier: 1.5,
     reactionWindow: 950,
     title: 'Médio'
   },
   dificil: {
     barHeight: 55,
-    fishAccel: 0.17,
-    fishFriction: 0.86,
-    targetChangeInterval: 700,
+    difficultyValue: 75,
     multiplier: 2.5,
     reactionWindow: 700,
     title: 'Difícil'
   },
   lendario: {
     barHeight: 38,
-    fishAccel: 0.28,
-    fishFriction: 0.83,
-    targetChangeInterval: 350,
+    difficultyValue: 95,
     multiplier: 4.0,
     reactionWindow: 500,
     title: 'Lendário'
@@ -84,9 +77,8 @@ let biteStartTime = 0;
 let barHeight = DIFFICULTY_CONFIG.facil.barHeight;
 let barY = 0; // Posição inferior da barra verde (0 a 320 - barHeight)
 let barVelocity = 0;
-const LIFT = 0.32;
-const GRAVITY = 0.20;
-const BOUNCE = -0.40;
+const ACC = 0.14; // Aceleração base (tanto para gravidade quanto lift)
+const BOUNCE_FACTOR = -0.66; // Ricochete do chão/teto (Stardew Valley)
 
 let fishY = 150; // Posição inferior do peixe (0 a 320 - 24)
 let fishVelocity = 0;
@@ -332,22 +324,32 @@ function gameLoop() {
   
   else if (gameState === 'REELING') {
     // Física do Green Bar (Bobber)
-    if (isPressing) {
-      barVelocity += LIFT;
-    } else {
-      barVelocity -= GRAVITY;
+    const config = DIFFICULTY_CONFIG[selectedDifficulty];
+    const difficultyValue = config.difficultyValue;
+    const isInside = (fishY + 20 >= barY) && (fishY + 4 <= barY + barHeight);
+
+    // Aceleração com amortecimento se o peixe estiver na barra verde
+    let bacc = isPressing ? ACC : -ACC;
+    if (isInside) {
+      bacc *= 0.6; // Suaviza aceleração no peixe para evitar oscilações excessivas
     }
+
+    barVelocity += bacc;
     
+    // Limitar velocidade terminal para estabilidade
+    barVelocity = Math.max(-6.5, Math.min(6.5, barVelocity));
+
     barY += barVelocity;
     
     // Colisão das bordas (Canal vertical de 320px)
     if (barY <= 0) {
       barY = 0;
-      barVelocity = barVelocity * BOUNCE;
+      barVelocity = isPressing ? 0 : BOUNCE_FACTOR * barVelocity;
       if (Math.abs(barVelocity) < 0.2) barVelocity = 0;
     } else if (barY >= 320 - barHeight) {
       barY = 320 - barHeight;
-      barVelocity = 0;
+      barVelocity = isPressing ? 0 : BOUNCE_FACTOR * barVelocity;
+      if (Math.abs(barVelocity) < 0.2) barVelocity = 0;
     }
     
     // Atualizar UI do Green Bar
@@ -355,50 +357,54 @@ function gameLoop() {
     barEl.style.bottom = `${barY}px`;
     barEl.style.height = `${barHeight}px`;
 
-    // Física e Movimento IA do Peixe
-    const config = DIFFICULTY_CONFIG[selectedDifficulty];
-    if (now - lastTargetChange > config.targetChangeInterval) {
-      lastTargetChange = now;
-      
-      // Escolher nova posição alvo
-      fishTargetY = Math.floor(Math.random() * (320 - 30)) + 5;
-      
-      // Em dificuldades maiores, probabilidade de movimentos repentinos e agressivos
-      if (selectedDifficulty === 'dificil' && Math.random() < 0.35) {
-        fishTargetY = Math.random() < 0.5 ? 20 : 280;
-      } else if (selectedDifficulty === 'lendario' && Math.random() < 0.5) {
-        fishTargetY = Math.random() < 0.5 ? 10 : 290;
+    // Movimento do Peixe (IA)
+    // 1. Mudança aleatória de destino baseado na dificuldade
+    if (Math.random() < difficultyValue * 0.00025) {
+      const percent = Math.min(0.99, (difficultyValue + (10 + Math.random() * 35)) * 0.01);
+      const maxFishY = 320 - 24;
+      const minJump = -fishY;
+      const maxJump = (maxFishY - fishY) * percent;
+      fishTargetY = fishY + (minJump + Math.random() * (maxJump - minJump));
+      fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
+    }
+
+    // 2. Comportamento errático para dificuldades altas (peixe corre)
+    if ((selectedDifficulty === 'dificil' || selectedDifficulty === 'lendario') && Math.random() < 0.001 * difficultyValue) {
+      const maxFishY = 320 - 24;
+      const jumpRange = 60 + difficultyValue * 1.2;
+      const jump = Math.random() < 0.5 ? -(30 + Math.random() * jumpRange) : (30 + Math.random() * jumpRange);
+      fishTargetY = fishY + jump;
+      fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
+    }
+
+    // 3. Interpolação física do peixe ao destino
+    if (fishTargetY !== -1 && Math.abs(fishY - fishTargetY) > 3) {
+      const denominator = (10 + Math.random() * 20) + Math.max(0, 100 - difficultyValue);
+      const fishAccel = (fishTargetY - fishY) / denominator;
+      fishVelocity += (fishAccel - fishVelocity) / 5;
+    } else {
+      // Pequeno drift/movimento aleatório lento
+      if (Math.random() < 0.0005 * difficultyValue) {
+        const maxFishY = 320 - 24;
+        fishTargetY = fishY + (Math.random() < 0.5 ? -(40 + Math.random() * 40) : (40 + Math.random() * 40));
+        fishTargetY = Math.max(10, Math.min(maxFishY - 10, fishTargetY));
       }
     }
-    
-    // Interpolar peixe até o alvo com aceleração
-    const diff = fishTargetY - fishY;
-    fishVelocity += diff * config.fishAccel;
-    fishVelocity *= config.fishFriction;
+
     fishY += fishVelocity;
-    
-    // Garantir limites do peixe (altura 24px)
-    if (fishY <= 0) {
-      fishY = 0;
-      fishVelocity = 0;
-    } else if (fishY >= 320 - 24) {
-      fishY = 320 - 24;
-      fishVelocity = 0;
-    }
+    fishY = Math.max(0, Math.min(320 - 24, fishY));
 
     // Atualizar UI do Peixe
     const fishEl = document.getElementById('fishing-fish');
     fishEl.style.bottom = `${fishY}px`;
 
-    // Verificar se o Peixe está dentro da Barra Verde
-    const isInside = (fishY + 24 >= barY) && (fishY <= barY + barHeight);
-    
+    // Atualizar progresso da captura (ganho / perda)
     if (isInside) {
-      catchProgress += 0.38; // Ganho rápido
+      catchProgress += 0.22; // Subida mais controlada
       barEl.style.borderColor = '#2ecc71';
       barEl.style.boxShadow = '0 0 12px rgba(46, 204, 113, 0.8)';
     } else {
-      catchProgress -= 0.22; // Perda mais lenta
+      catchProgress -= 0.32; // Perda mais rápida que subida (Stardew Valley)
       barEl.style.borderColor = '#e74c3c';
       barEl.style.boxShadow = '0 0 12px rgba(231, 76, 60, 0.8)';
     }
